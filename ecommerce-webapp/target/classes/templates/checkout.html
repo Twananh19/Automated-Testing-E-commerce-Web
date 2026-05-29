@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #2c3e50; color: white; border-radius: 8px; margin-bottom: 20px; }
+        .header h1 { font-size: 1.5rem; }
+        .back-link { color: white; text-decoration: none; background: #3498db; padding: 8px 16px; border-radius: 4px; }
+        .checkout-container { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
+        .warning { background: #fff3cd; color: #856404; padding: 15px; border-radius: 4px; margin-bottom: 20px; text-align: center; }
+        .voucher-section { margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 4px; }
+        .voucher-section h3 { margin-bottom: 10px; }
+        .voucher-form { display: flex; gap: 10px; }
+        .voucher-form input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .voucher-form button { padding: 10px 20px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .voucher-success { color: #27ae60; margin-top: 10px; font-weight: bold; }
+        .voucher-error { color: #e74c3c; margin-top: 10px; font-weight: bold; }
+        .order-summary { margin: 20px 0; }
+        .order-summary table { width: 100%; border-collapse: collapse; }
+        .order-summary td { padding: 8px 0; }
+        .order-total { font-size: 1.4rem; font-weight: bold; color: #2c3e50; border-top: 2px solid #2c3e50; padding-top: 10px; margin-top: 10px; }
+        .place-order-btn { display: block; width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 4px; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
+        .place-order-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Thanh toán</h1>
+        <a href="/cart" class="back-link">Quay lại giỏ hàng</a>
+    </div>
+
+    <div class="checkout-container">
+        <div th:if="${warning}" class="warning" id="checkout-warning" th:text="${warning}"></div>
+
+        <div th:unless="${cart.items.isEmpty()}">
+            <h2>Chi tiết đơn hàng</h2>
+            <div class="order-summary">
+                <table>
+                    <tr th:each="item : ${cart.items}">
+                        <td th:text="${item.productName}">Product</td>
+                        <td th:text="'x' + ${item.quantity}">x1</td>
+                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="order-total">
+                Tổng tiền: <span id="order-total"
+                    th:text="${discountedTotal != null ? #numbers.formatDecimal(discountedTotal, 0, 'COMMA', 0, 'POINT') + ' VND' : #numbers.formatDecimal(orderTotal, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</span>
+            </div>
+
+            <div class="voucher-section">
+                <h3>Mã giảm giá</h3>
+                <form th:action="@{/checkout/apply-voucher}" method="post" class="voucher-form">
+                    <input type="text" id="voucher-input" name="voucherCode" placeholder="Nhập mã voucher..."
+                           th:value="${voucherCode}">
+                    <button type="submit" id="apply-voucher-btn">Áp dụng</button>
+                </form>
+                <p th:if="${voucherSuccess}" class="voucher-success" id="voucher-message" th:text="${voucherSuccess}"></p>
+                <p th:if="${voucherError}" class="voucher-error" id="voucher-message" th:text="${voucherError}"></p>
+            </div>
+
+            <form th:action="@{/checkout/place-order}" method="post">
+                <input type="hidden" name="orderId" th:value="${orderId}">
+                <button type="submit" class="place-order-btn" id="place-order-btn">Đặt hàng</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+com/ecommerce/selenium/BaseSeleniumTest.class
+com/ecommerce/selenium/pages/HomePage.class
+com/ecommerce/selenium/CartTest.class
+com/ecommerce/selenium/pages/OrderConfirmationPage.class
+com/ecommerce/unit/CartServiceTest.class
+com/ecommerce/selenium/HomePageTest.class
+com/ecommerce/selenium/pages/CartPage.class
+com/ecommerce/selenium/pages/CheckoutPage.class
+com/ecommerce/selenium/CheckoutFlowTest.class
+com/ecommerce/unit/OrderServiceTest.class
+com/ecommerce/unit/ProductServiceTest.class

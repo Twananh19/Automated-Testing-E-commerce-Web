@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #2c3e50; color: white; border-radius: 8px; margin-bottom: 20px; }
+        .header h1 { font-size: 1.5rem; }
+        .back-link { color: white; text-decoration: none; background: #3498db; padding: 8px 16px; border-radius: 4px; }
+        .cart-container { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; }
+        .remove-btn { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .total-row { font-size: 1.3rem; font-weight: bold; text-align: right; padding: 15px 0; border-top: 2px solid #2c3e50; }
+        .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; text-decoration: none; color: white; }
+        .btn-checkout { background: #27ae60; }
+        .btn-clear { background: #e74c3c; }
+        .empty-cart { text-align: center; padding: 40px; color: #7f8c8d; }
+        .empty-cart a { color: #3498db; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Giỏ hàng</h1>
+        <a href="/" class="back-link">Tiếp tục mua sắm</a>
+    </div>
+
+    <div class="cart-container">
+        <div th:if="${cartEmpty}" class="empty-cart" id="empty-cart">
+            <p>Giỏ hàng trống.</p>
+            <p><a href="/">Quay lại mua sắm</a></p>
+        </div>
+
+        <div th:unless="${cartEmpty}" id="cart-items">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${cart.items}" th:id="'cart-item-' + ${item.productId}">
+                        <td th:text="${item.productName}">Product Name</td>
+                        <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</td>
+                        <td th:text="${item.quantity}">1</td>
+                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</td>
+                        <td>
+                            <form th:action="@{'/cart/remove/' + ${item.productId}}" method="post">
+                                <button type="submit" class="remove-btn"
+                                        th:id="'remove-' + ${item.productId}">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="total-row">
+                Tổng cộng: <span id="cart-total"
+                    th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+            </div>
+
+            <div class="actions">
+                <form th:action="@{/cart/clear}" method="post">
+                    <button type="submit" class="btn btn-clear" id="clear-cart-btn">Xóa giỏ hàng</button>
+                </form>
+                <a href="/checkout" class="btn btn-checkout" id="checkout-btn">Thanh toán</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
