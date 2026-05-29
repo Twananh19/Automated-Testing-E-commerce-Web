@@ -1,2 +1,3 @@
-com/demo/MathProcessorStatementTest.class
-com/demo/MathProcessorPathTest.class
+com/saucedemo/tests/CheckoutTest.class
+com/saucedemo/base/BaseTest.class
+com/saucedemo/tests/LoginTest.class

@@ -1,2 +1,3 @@
-/home/twan/KIỂM THỬ PHẦN MỀM/src/test/java/com/demo/MathProcessorPathTest.java
-/home/twan/KIỂM THỬ PHẦN MỀM/src/test/java/com/demo/MathProcessorStatementTest.java
+/home/twan/KIỂM THỬ PHẦN MỀM/src/test/java/com/saucedemo/base/BaseTest.java
+/home/twan/KIỂM THỬ PHẦN MỀM/src/test/java/com/saucedemo/tests/CheckoutTest.java
+/home/twan/KIỂM THỬ PHẦN MỀM/src/test/java/com/saucedemo/tests/LoginTest.java
