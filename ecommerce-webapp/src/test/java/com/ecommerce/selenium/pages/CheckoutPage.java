@@ -30,9 +30,17 @@ public class CheckoutPage {
 
     public CheckoutPage applyVoucher(String code) {
         WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(VOUCHER_INPUT));
-        input.clear();
-        input.sendKeys(code);
-        driver.findElement(APPLY_VOUCHER_BTN).click();
+        
+        // Use Javascript to set the value directly to bypass Linux ChromeDriver keyboard layout bugs on special characters
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(
+            "arguments[0].value = arguments[1];" +
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));" +
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            input, code
+        );
+        
+        WebElement btn = driver.findElement(APPLY_VOUCHER_BTN);
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(VOUCHER_MESSAGE));
         return new CheckoutPage(driver);
     }
@@ -49,7 +57,8 @@ public class CheckoutPage {
 
     public OrderConfirmationPage placeOrder() {
         WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(PLACE_ORDER_BTN));
-        btn.click();
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        wait.until(ExpectedConditions.urlContains("/order-confirmation"));
         return new OrderConfirmationPage(driver);
     }
 

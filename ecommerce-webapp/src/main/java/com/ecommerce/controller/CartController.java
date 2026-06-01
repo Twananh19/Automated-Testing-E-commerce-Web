@@ -6,36 +6,38 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
 
-    private static final String DEFAULT_USER = "user1";
-
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping
-    public String viewCart(Model model) {
-        Cart cart = cartService.getCart(DEFAULT_USER);
+    public String viewCart(Model model, Principal principal) {
+        String username = principal.getName();
+        Cart cart = cartService.getCart(username);
         model.addAttribute("cart", cart);
-        model.addAttribute("cartTotal", cartService.getCartTotal(DEFAULT_USER));
+        model.addAttribute("cartTotal", cartService.getCartTotal(username));
         model.addAttribute("cartEmpty", cart.getItems().isEmpty());
+        model.addAttribute("username", username);
         return "cart";
     }
 
     @PostMapping("/remove/{productId}")
-    public String removeFromCart(@PathVariable Long productId) {
-        cartService.removeFromCart(DEFAULT_USER, productId);
+    public String removeFromCart(@PathVariable Long productId, Principal principal) {
+        cartService.removeFromCart(principal.getName(), productId);
         return "redirect:/cart";
     }
 
     @PostMapping("/clear")
-    public String clearCart() {
-        cartService.clearCart(DEFAULT_USER);
+    public String clearCart(Principal principal) {
+        cartService.clearCart(principal.getName());
         return "redirect:/cart";
     }
 }

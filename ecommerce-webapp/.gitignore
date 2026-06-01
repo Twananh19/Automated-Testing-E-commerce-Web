@@ -1,0 +1,20 @@
+# IDE
+.codegraph
+.vscode
+.idea
+*.iml
+
+# Build
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node.js (legacy — no longer used on main branch)
+node_modules/
+package-lock.json
+
+# Logs
+*.log

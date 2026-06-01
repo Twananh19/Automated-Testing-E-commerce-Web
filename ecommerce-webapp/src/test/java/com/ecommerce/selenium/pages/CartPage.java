@@ -35,19 +35,20 @@ public class CartPage {
     public CartPage removeItem(Long productId) {
         By removeBtn = By.id("remove-" + productId);
         WebElement button = wait.until(ExpectedConditions.elementToBeClickable(removeBtn));
-        button.click();
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
         return new CartPage(driver);
     }
 
     public CheckoutPage clickCheckout() {
         WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(CHECKOUT_BTN));
-        btn.click();
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        wait.until(ExpectedConditions.urlContains("/checkout"));
         return new CheckoutPage(driver);
     }
 
     public CartPage clearCart() {
         WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(CLEAR_CART_BTN));
-        btn.click();
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
         return new CartPage(driver);
     }
 

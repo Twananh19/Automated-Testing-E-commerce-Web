@@ -33,6 +33,9 @@ class HomePageTest extends BaseSeleniumTest {
 
         homePage.searchProduct("XYZ_NONEXISTENT_PRODUCT_12345");
 
+        System.out.println("[DEBUG-TEST] Current URL: " + driver.getCurrentUrl());
+        System.out.println("[DEBUG-TEST] Page Source:\n" + driver.getPageSource());
+
         assertTrue(homePage.isEmptyMessageDisplayed());
     }
 }

@@ -10,13 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 @Controller
 public class CheckoutController {
 
     private final CartService cartService;
     private final OrderService orderService;
-
-    private static final String DEFAULT_USER = "user1";
 
     public CheckoutController(CartService cartService, OrderService orderService) {
         this.cartService = cartService;
@@ -24,8 +24,9 @@ public class CheckoutController {
     }
 
     @GetMapping("/checkout")
-    public String checkoutPage(Model model) {
-        Cart cart = cartService.getCart(DEFAULT_USER);
+    public String checkoutPage(Model model, Principal principal) {
+        String username = principal.getName();
+        Cart cart = cartService.getCart(username);
         if (cart.getItems().isEmpty()) {
             model.addAttribute("warning", "Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi thanh toán.");
             model.addAttribute("cart", cart);
@@ -33,20 +34,23 @@ public class CheckoutController {
             return "checkout";
         }
         model.addAttribute("cart", cart);
-        model.addAttribute("orderTotal", cartService.getCartTotal(DEFAULT_USER));
+        model.addAttribute("orderTotal", cartService.getCartTotal(username));
         return "checkout";
     }
 
     @PostMapping("/checkout/apply-voucher")
-    public String applyVoucher(@RequestParam String voucherCode, RedirectAttributes redirectAttributes) {
+    public String applyVoucher(@RequestParam String voucherCode,
+                               RedirectAttributes redirectAttributes,
+                               Principal principal) {
         try {
-            Cart cart = cartService.getCart(DEFAULT_USER);
+            String username = principal.getName();
+            Cart cart = cartService.getCart(username);
             if (cart.getItems().isEmpty()) {
                 redirectAttributes.addFlashAttribute("voucherError", "Giỏ hàng trống");
                 return "redirect:/checkout";
             }
 
-            Order tempOrder = orderService.createOrder(DEFAULT_USER, cart.getItems());
+            Order tempOrder = orderService.createOrder(username, cart.getItems());
             orderService.applyVoucher(tempOrder.getId(), voucherCode);
             Order updatedOrder = orderService.findById(tempOrder.getId());
 
@@ -63,21 +67,23 @@ public class CheckoutController {
 
     @PostMapping("/checkout/place-order")
     public String placeOrder(@RequestParam(required = false) Long orderId,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes,
+                             Principal principal) {
         try {
+            String username = principal.getName();
             Order order;
             if (orderId != null) {
                 order = orderService.findById(orderId);
             } else {
-                Cart cart = cartService.getCart(DEFAULT_USER);
+                Cart cart = cartService.getCart(username);
                 if (cart.getItems().isEmpty()) {
                     redirectAttributes.addFlashAttribute("warning", "Giỏ hàng trống!");
                     return "redirect:/checkout";
                 }
-                order = orderService.createOrder(DEFAULT_USER, cart.getItems());
+                order = orderService.createOrder(username, cart.getItems());
             }
 
-            cartService.clearCart(DEFAULT_USER);
+            cartService.clearCart(username);
             return "redirect:/order-confirmation/" + order.getId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

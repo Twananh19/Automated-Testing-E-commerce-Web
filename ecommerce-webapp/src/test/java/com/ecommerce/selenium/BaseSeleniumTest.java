@@ -51,9 +51,7 @@ public abstract class BaseSeleniumTest {
     @AfterEach
     void tearDown(TestInfo testInfo) {
         if (driver != null) {
-            if (testInfo.getTags().contains("failed") || isTestFailed(testInfo)) {
-                takeScreenshot(testInfo.getDisplayName());
-            }
+            takeScreenshot(testInfo.getDisplayName());
             driver.quit();
         }
     }
@@ -72,13 +70,56 @@ public abstract class BaseSeleniumTest {
             Path targetDir = Paths.get("target", "screenshots");
             Files.createDirectories(targetDir);
             String fileName = testName.replaceAll("[^a-zA-Z0-9]", "_") + ".png";
-            Files.copy(screenshot.toPath(), targetDir.resolve(fileName));
-        } catch (IOException e) {
+            Files.copy(screenshot.toPath(), targetDir.resolve(fileName), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Screenshot successfully saved to target/screenshots/" + fileName);
+        } catch (Exception e) {
             System.err.println("Failed to take screenshot: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     protected void navigateTo(String path) {
+        System.out.println("[NAVIGATE] Navigating to: " + path);
         driver.get(baseUrl + path);
+        String currentUrl = driver.getCurrentUrl();
+        System.out.println("[NAVIGATE] Current URL after driver.get: " + currentUrl);
+        if (currentUrl.contains("/login")) {
+            System.out.println("[NAVIGATE] Redirection to /login detected! Logging in...");
+            loginAs("standard_user", "secret_sauce");
+            String postLoginUrl = driver.getCurrentUrl();
+            System.out.println("[NAVIGATE] Current URL after login: " + postLoginUrl);
+            if (!postLoginUrl.contains(path) && !path.equals("/")) {
+                System.out.println("[NAVIGATE] Navigating back to final destination: " + path);
+                driver.get(baseUrl + path);
+            }
+        }
+    }
+
+    protected void loginAs(String username, String password) {
+        System.out.println("[LOGIN] Initiating login for user: " + username);
+        driver.get(baseUrl + "/login");
+        org.openqa.selenium.support.ui.WebDriverWait wait = new org.openqa.selenium.support.ui.WebDriverWait(driver, Duration.ofSeconds(10));
+        
+        System.out.println("[LOGIN] Waiting for username field...");
+        org.openqa.selenium.WebElement usernameField = wait.until(
+            org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated(org.openqa.selenium.By.id("username"))
+        );
+        usernameField.clear();
+        usernameField.sendKeys(username);
+        
+        org.openqa.selenium.WebElement passwordField = driver.findElement(org.openqa.selenium.By.id("password"));
+        passwordField.clear();
+        passwordField.sendKeys(password);
+        
+        System.out.println("[LOGIN] Clicking login button...");
+        org.openqa.selenium.WebElement loginBtn = driver.findElement(org.openqa.selenium.By.cssSelector("button[data-testid='login-button']"));
+        loginBtn.click();
+        
+        System.out.println("[LOGIN] Waiting for redirect away from /login...");
+        wait.until(org.openqa.selenium.support.ui.ExpectedConditions.not(
+            org.openqa.selenium.support.ui.ExpectedConditions.urlContains("/login")
+        ));
+        System.out.println("[LOGIN] Login complete. Redirected to: " + driver.getCurrentUrl());
     }
 }
+

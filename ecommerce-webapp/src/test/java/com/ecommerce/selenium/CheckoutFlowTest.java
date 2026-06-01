@@ -38,8 +38,9 @@ class CheckoutFlowTest extends BaseSeleniumTest {
         // Áp dụng voucher
         checkoutPage = checkoutPage.applyVoucher("SAVE10");
         String voucherMsg = checkoutPage.getVoucherMessage();
+        System.out.println("[DEBUG-TEST] test_fullPurchaseFlow Voucher Message: '" + voucherMsg + "'");
         assertTrue(voucherMsg.contains("thành công"));
-
+        
         // Đặt hàng
         OrderConfirmationPage confirmationPage = checkoutPage.placeOrder();
         assertTrue(confirmationPage.isConfirmationDisplayed());
@@ -61,6 +62,7 @@ class CheckoutFlowTest extends BaseSeleniumTest {
         checkoutPage = checkoutPage.applyVoucher("SAVE20");
 
         String message = checkoutPage.getVoucherMessage();
+        System.out.println("[DEBUG-TEST] test_applyValidVoucher Voucher Message: '" + message + "'");
         assertTrue(message.contains("thành công"));
     }
 

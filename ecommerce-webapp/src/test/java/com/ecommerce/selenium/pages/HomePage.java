@@ -31,21 +31,44 @@ public class HomePage {
     }
 
     public HomePage searchProduct(String keyword) {
-        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(SEARCH_INPUT));
-        input.clear();
-        input.sendKeys(keyword);
-        driver.findElement(SEARCH_BTN).click();
+        WebElement input = wait.until(ExpectedConditions.elementToBeClickable(SEARCH_INPUT));
+        
+        // Use Javascript to set the value directly to bypass Linux ChromeDriver keyboard layout bugs on special characters
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(
+            "arguments[0].value = arguments[1];" +
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));" +
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            input, keyword
+        );
+        
+        input.submit();
+        
+        // Wait for page reload / URL update to prevent race conditions
+        wait.until(ExpectedConditions.urlContains("keyword=" + keyword));
+        
         wait.until(ExpectedConditions.visibilityOfElementLocated(PRODUCT_LIST));
         return this;
     }
 
     public HomePage clickAddToCart(Long productId) {
+        int oldCount = getCartCount();
         By addBtn = By.id("add-to-cart-" + productId);
         WebElement button = wait.until(ExpectedConditions.elementToBeClickable(addBtn));
-        button.click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(PRODUCT_LIST));
+        
+        // Use Javascript click to bypass viewport/overlap click interception issues in headless Chrome
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+        
+        wait.until(d -> {
+            try {
+                WebElement count = d.findElement(CART_COUNT);
+                return Integer.parseInt(count.getText()) > oldCount;
+            } catch (Exception e) {
+                return false;
+            }
+        });
         return this;
     }
+
 
     public List<WebElement> getProductList() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(PRODUCT_LIST));
@@ -58,7 +81,9 @@ public class HomePage {
     }
 
     public CartPage goToCart() {
-        driver.findElement(CART_LINK).click();
+        WebElement link = wait.until(ExpectedConditions.elementToBeClickable(CART_LINK));
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", link);
+        wait.until(ExpectedConditions.urlContains("/cart"));
         return new CartPage(driver);
     }
 

@@ -138,6 +138,60 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    /**
+     * Xác nhận đơn hàng. Chỉ cho phép khi status = PENDING.
+     * State Transition: PENDING → CONFIRMED
+     */
+    @Transactional
+    public Order confirmOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new InvalidOrderStateException(
+                    "Không thể xác nhận đơn hàng với trạng thái: " + order.getStatus());
+        }
+
+        order.setStatus(OrderStatus.CONFIRMED);
+        return orderRepository.save(order);
+    }
+
+    /**
+     * Giao hàng. Chỉ cho phép khi status = CONFIRMED.
+     * State Transition: CONFIRMED → SHIPPED
+     */
+    @Transactional
+    public Order shipOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
+
+        if (order.getStatus() != OrderStatus.CONFIRMED) {
+            throw new InvalidOrderStateException(
+                    "Không thể giao hàng với trạng thái: " + order.getStatus());
+        }
+
+        order.setStatus(OrderStatus.SHIPPED);
+        return orderRepository.save(order);
+    }
+
+    /**
+     * Hoàn tất giao hàng. Chỉ cho phép khi status = SHIPPED.
+     * State Transition: SHIPPED → DELIVERED
+     */
+    @Transactional
+    public Order deliverOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
+
+        if (order.getStatus() != OrderStatus.SHIPPED) {
+            throw new InvalidOrderStateException(
+                    "Không thể hoàn tất giao hàng với trạng thái: " + order.getStatus());
+        }
+
+        order.setStatus(OrderStatus.DELIVERED);
+        return orderRepository.save(order);
+    }
+
     public Order findById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Không tìm thấy đơn hàng với ID: " + id));

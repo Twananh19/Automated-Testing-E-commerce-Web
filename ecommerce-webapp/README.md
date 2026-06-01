@@ -1,6 +1,6 @@
-# E-Commerce Web Application - Automated Testing Project
+# E-Commerce Web Application — Automated Testing Project
 
-Dự án kiểm thử tự động cho ứng dụng web thương mại điện tử sử dụng Spring Boot, JUnit 5, Mockito và Selenium WebDriver.
+Dự án kiểm thử tự động cho ứng dụng web thương mại điện tử sử dụng Spring Boot, JUnit 5, Mockito, Selenium WebDriver, JaCoCo và PIT Mutation Testing.
 
 ## Tech Stack
 
@@ -8,12 +8,18 @@ Dự án kiểm thử tự động cho ứng dụng web thương mại điện t
 |-----------|-----------|---------|
 | Framework | Spring Boot | 3.2.5 |
 | Template Engine | Thymeleaf | (via starter) |
+| Authentication | Spring Security | (via starter) |
 | Database | H2 (in-memory) | 2.x |
 | ORM | Spring Data JPA | (via starter) |
 | Unit Testing | JUnit 5 + Mockito | 5.10.x |
+| Property-Based Testing | jqwik | 1.8.4 |
+| Integration Testing | MockMvc + @WebMvcTest | (via spring-boot-starter-test) |
 | E2E Testing | Selenium WebDriver | 4.27.0 |
 | Driver Management | WebDriverManager | 5.9.2 |
+| Code Coverage | JaCoCo | 0.8.11 |
+| Mutation Testing | PIT | 1.15.3 |
 | Build Tool | Maven | 3.9+ |
+| CI/CD | GitHub Actions | - |
 | Java | JDK | 17+ |
 
 ## Prerequisites
@@ -26,151 +32,70 @@ Dự án kiểm thử tự động cho ứng dụng web thương mại điện t
 ## Cấu trúc dự án
 
 ```
-spring-boot-app/
+ecommerce-webapp/
 ├── pom.xml
 ├── README.md
+├── .github/workflows/ci.yml           (CI/CD)
+├── docs/                               (Tài liệu kiểm thử)
+│   ├── requirements.md                 (Đặc tả yêu cầu)
+│   ├── test-plan.md                    (Kế hoạch kiểm thử IEEE 829)
+│   ├── test-case-spec.md               (Bảng test case)
+│   └── traceability-matrix.md          (Ma trận truy xuất)
 ├── src/
 │   ├── main/
 │   │   ├── java/com/ecommerce/
-│   │   │   ├── EcommerceApplication.java         (Main class)
-│   │   │   ├── config/DataSeeder.java            (Seed data)
-│   │   │   ├── exception/                        (Custom exceptions)
-│   │   │   ├── model/                            (Entity + POJO)
-│   │   │   ├── repository/                       (JPA Repositories)
-│   │   │   ├── service/                          (Business logic)
-│   │   │   └── controller/                       (Web controllers)
+│   │   │   ├── EcommerceApplication.java
+│   │   │   ├── config/
+│   │   │   │   ├── DataSeeder.java
+│   │   │   │   └── SecurityConfig.java
+│   │   │   ├── exception/
+│   │   │   ├── model/
+│   │   │   ├── repository/
+│   │   │   ├── service/
+│   │   │   └── controller/
 │   │   └── resources/
 │   │       ├── application.properties
-│   │       └── templates/                        (Thymeleaf HTML)
+│   │       └── templates/
 │   └── test/
 │       ├── java/com/ecommerce/
-│       │   ├── unit/                             (25 Unit tests)
-│       │   └── selenium/                         (8 E2E tests)
+│       │   ├── unit/                    (Unit Tests — JUnit 5 + Mockito)
+│       │   ├── integration/             (Integration Tests — @WebMvcTest)
+│       │   └── selenium/                (E2E Tests — Selenium WebDriver)
 │       └── resources/
 │           └── application-test.properties
 ```
 
-## Setup (Step-by-step)
+## Setup & Run
 
 ```bash
-# 1. Di chuyển vào thư mục project
-cd spring-boot-app
-
-# 2. Biên dịch project
+# 1. Biên dịch project
 mvn compile
 
-# 3. Chạy ứng dụng (xem web tại http://localhost:8080)
+# 2. Chạy ứng dụng (http://localhost:8080)
 mvn spring-boot:run
 
-# 4. Chạy unit tests
+# 3. Chạy Unit + Integration Tests
 mvn test
 
-# 5. Chạy Selenium tests (cần Chrome)
+# 4. Chạy tất cả tests (bao gồm Selenium E2E)
 mvn verify
 
-# 6. Chạy tất cả tests + report
-mvn verify
+# 5. Generate JaCoCo coverage report
+mvn jacoco:report
+# Mở target/site/jacoco/index.html
+
+# 6. Chạy PIT Mutation Testing
+mvn org.pitest:pitest-maven:mutationCoverage
+# Mở target/pit-reports/index.html
 ```
 
-## Chạy từng loại test
+## Tài khoản test
 
-```bash
-# Chỉ Unit Tests (25 test cases)
-mvn test -Dtest="com.ecommerce.unit.*"
-
-# Chỉ Selenium E2E Tests (8 test cases)
-mvn verify -Dit.test="com.ecommerce.selenium.*"
-
-# Một class test cụ thể
-mvn test -Dtest="com.ecommerce.unit.ProductServiceTest"
-```
-
-## Xem kết quả
-
-- **Surefire Reports (Unit)**: `target/surefire-reports/`
-- **Failsafe Reports (E2E)**: `target/failsafe-reports/`
-- **Screenshots (khi test fail)**: `target/screenshots/`
-- **H2 Console**: http://localhost:8080/h2-console (JDBC URL: `jdbc:h2:mem:ecommercedb`)
-
-## Danh sách Test Cases
-
-### Unit Tests (25 cases)
-
-| # | Class | Test Case | Mô tả |
-|---|-------|-----------|--------|
-| 1 | ProductServiceTest | test_addProduct_withValidData_shouldSaveSuccessfully | Thêm SP hợp lệ |
-| 2 | ProductServiceTest | test_addProduct_withEmptyName_shouldThrowException | Tên rỗng → lỗi |
-| 3 | ProductServiceTest | test_addProduct_withNegativePrice_shouldThrowException | Giá âm → lỗi |
-| 4 | ProductServiceTest | test_updateStock_validQuantity_shouldUpdateCorrectly | Cập nhật tồn kho |
-| 5 | ProductServiceTest | test_updateStock_negativeResult_shouldThrowInsufficientStockException | Tồn kho âm → lỗi |
-| 6 | ProductServiceTest | test_searchByCategory_caseInsensitive_shouldReturnResults | Tìm theo category |
-| 7 | ProductServiceTest | test_calculateDiscount_validPercent_shouldReturnCorrectPrice | Giảm giá hợp lệ |
-| 8 | ProductServiceTest | test_calculateDiscount_above100Percent_shouldThrowException | Discount > 100% |
-| 9 | OrderServiceTest | test_createOrder_sufficientStock_shouldCreateSuccessfully | Tạo đơn hàng |
-| 10 | OrderServiceTest | test_createOrder_insufficientStock_shouldThrowException | Hết hàng → lỗi |
-| 11 | OrderServiceTest | test_cancelOrder_pendingStatus_shouldCancelSuccessfully | Hủy đơn PENDING |
-| 12 | OrderServiceTest | test_cancelOrder_confirmedStatus_shouldThrowException | Hủy đơn CONFIRMED |
-| 13 | OrderServiceTest | test_calculateTotal_below10Items_noDiscount | <10 items, no discount |
-| 14 | OrderServiceTest | test_calculateTotal_10to19Items_apply5PercentDiscount | 10-19 items, -5% |
-| 15 | OrderServiceTest | test_calculateTotal_20orMoreItems_apply10PercentDiscount | >=20 items, -10% |
-| 16 | OrderServiceTest | test_applyVoucher_validCode_shouldApplyDiscount | Voucher hợp lệ |
-| 17 | OrderServiceTest | test_applyVoucher_invalidCode_shouldThrowException | Voucher sai |
-| 18 | OrderServiceTest | test_applyVoucher_expiredCode_shouldThrowException | Voucher hết hạn |
-| 19 | CartServiceTest | test_addToCart_productInStock_shouldAddSuccessfully | Thêm vào giỏ |
-| 20 | CartServiceTest | test_addToCart_outOfStock_shouldThrowException | Hết hàng → lỗi |
-| 21 | CartServiceTest | test_addToCart_exceedsStock_shouldThrowException | Vượt tồn kho |
-| 22 | CartServiceTest | test_removeFromCart_existingItem_shouldRemoveSuccessfully | Xóa khỏi giỏ |
-| 23 | CartServiceTest | test_removeFromCart_nonExistentItem_shouldThrowException | SP không có |
-| 24 | CartServiceTest | test_clearCart_shouldRemoveAllItems | Xóa toàn bộ giỏ |
-| 25 | CartServiceTest | test_getCartTotal_multipleItems_shouldCalculateCorrectly | Tính tổng giỏ |
-
-### Selenium E2E Tests (8 cases)
-
-| # | Class | Test Case | Mô tả |
-|---|-------|-----------|--------|
-| 1 | HomePageTest | test_searchProduct_byKeyword_shouldShowRelevantResults | Tìm kiếm SP |
-| 2 | HomePageTest | test_searchProduct_noResults_shouldShowEmptyMessage | Tìm không có kết quả |
-| 3 | CartTest | test_addMultipleProducts_shouldUpdateCartCount | Thêm nhiều SP |
-| 4 | CartTest | test_removeProductFromCart_shouldRecalculateTotal | Xóa SP tính lại tổng |
-| 5 | CheckoutFlowTest | test_fullPurchaseFlow_validVoucher_shouldCompleteOrder | Happy path E2E |
-| 6 | CheckoutFlowTest | test_applyValidVoucher_shouldShowDiscountedTotal | Voucher hợp lệ |
-| 7 | CheckoutFlowTest | test_applyInvalidVoucher_shouldShowErrorMessage | Voucher không hợp lệ |
-| 8 | CheckoutFlowTest | test_checkoutWithEmptyCart_shouldShowWarning | Giỏ trống → cảnh báo |
-
-## Kịch bản Demo (10 phút)
-
-### Phút 1-2: Giới thiệu
-- Mở project, giải thích cấu trúc thư mục
-- Giới thiệu tech stack
-
-### Phút 3-4: Chạy ứng dụng
-```bash
-mvn spring-boot:run
-```
-- Mở browser → http://localhost:8080
-- Demo: tìm kiếm sản phẩm, thêm vào giỏ, checkout
-
-### Phút 5-6: Unit Tests
-```bash
-mvn test
-```
-- Xem output: 25 tests passed
-- Mở file test, giải thích cấu trúc Arrange-Act-Assert
-- Highlight: @Mock, @InjectMocks, verify(), assertThrows()
-
-### Phút 7-8: Selenium E2E Tests
-```bash
-mvn verify
-```
-- Xem output: 8 E2E tests passed
-- Mở Page Object files, giải thích pattern
-- Highlight: WebDriverWait, headless mode, screenshot on failure
-
-### Phút 9-10: Kết luận
-- Mở H2 Console → xem data đã seed
-- Tổng kết: 33 test cases (25 Unit + 8 E2E)
-- Testing pyramid: 75% Unit, 25% E2E
-- Giải thích Surefire vs Failsafe plugin
+| Username | Password | Role |
+|----------|----------|------|
+| standard_user | secret_sauce | USER |
+| admin_user | admin_pass | USER, ADMIN |
+| performance_glitch_user | secret_sauce | USER |
 
 ## Mã voucher test
 
@@ -180,6 +105,30 @@ mvn verify
 | SAVE20 | 20% | Hợp lệ |
 | SAVE50 | 50% | Hợp lệ |
 | EXPIRED2024 | - | Hết hạn |
+
+## Testing Pyramid
+
+```
+        /\
+       /E2E\          12-13 cases (Selenium WebDriver)
+      /──────\
+     / Integ  \       12-15 cases (@WebMvcTest + @DataJpaTest)
+    /──────────\
+   /  Unit Test  \    30-32 cases (JUnit 5 + Mockito + jqwik)
+  /──────────────\
+```
+
+## Kỹ thuật kiểm thử áp dụng
+
+- **Boundary Value Analysis (BVA)** — Kiểm tra giá trị biên
+- **Equivalence Partitioning (EP)** — Phân lớp tương đương
+- **Decision Table Testing** — Bảng quyết định
+- **State Transition Testing** — Kiểm thử chuyển trạng thái
+- **Property-Based Testing** — Kiểm thử dựa trên tính chất
+- **Pairwise / Combinatorial Testing** — Kiểm thử tổ hợp
+- **White-box: Path Coverage** — Bao phủ đường đi
+- **Mutation Testing** — Kiểm thử đột biến (PIT)
+- **Exploratory Testing** — Kiểm thử khám phá
 
 ## Tác giả
 

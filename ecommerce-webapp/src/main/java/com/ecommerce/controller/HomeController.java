@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -15,15 +16,14 @@ public class HomeController {
     private final ProductService productService;
     private final CartService cartService;
 
-    private static final String DEFAULT_USER = "user1";
-
     public HomeController(ProductService productService, CartService cartService) {
         this.productService = productService;
         this.cartService = cartService;
     }
 
     @GetMapping("/")
-    public String index(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+    public String index(@RequestParam(value = "keyword", required = false) String keyword,
+                        Model model, Principal principal) {
         List<Product> products;
         if (keyword != null && !keyword.trim().isEmpty()) {
             products = productService.searchByName(keyword);
@@ -32,13 +32,15 @@ public class HomeController {
             products = productService.findAll();
         }
         model.addAttribute("products", products);
-        model.addAttribute("cartItemCount", cartService.getCart(DEFAULT_USER).getItems().size());
+        model.addAttribute("cartItemCount",
+                cartService.getCart(principal.getName()).getItems().size());
+        model.addAttribute("username", principal.getName());
         return "index";
     }
 
     @PostMapping("/add-to-cart/{productId}")
-    public String addToCart(@PathVariable Long productId) {
-        cartService.addToCart(DEFAULT_USER, productId, 1);
+    public String addToCart(@PathVariable Long productId, Principal principal) {
+        cartService.addToCart(principal.getName(), productId, 1);
         return "redirect:/";
     }
 }

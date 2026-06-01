@@ -1,62 +1,1119 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce Shop</title>
+    <title>Stella - Simple is More</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #2c3e50; color: white; border-radius: 8px; margin-bottom: 20px; }
-        .header h1 { font-size: 1.5rem; }
-        .cart-link { color: white; text-decoration: none; background: #e74c3c; padding: 8px 16px; border-radius: 4px; }
-        .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
-        .search-bar input { flex: 1; padding: 10px 15px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
-        .search-bar button { padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .product-card h3 { margin-bottom: 8px; color: #2c3e50; }
-        .product-card .price { color: #e74c3c; font-size: 1.2rem; font-weight: bold; margin: 8px 0; }
-        .product-card .stock { color: #7f8c8d; margin-bottom: 12px; }
-        .product-card .category { color: #3498db; font-size: 0.9rem; margin-bottom: 8px; }
-        .add-btn { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        .add-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
-        .empty-message { text-align: center; padding: 40px; color: #7f8c8d; font-size: 1.2rem; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Top Utility Promo Bar */
+        .promo-bar {
+            background: #0f172a;
+            color: #f8fafc;
+            font-size: 0.75rem;
+            padding: 8px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .promo-left strong {
+            color: #38bdf8;
+        }
+        .promo-right span {
+            margin: 0 8px;
+            opacity: 0.8;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #ffffff;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            text-decoration: none;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: lowercase;
+        }
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Search bar inside navbar */
+        .nav-center {
+            flex: 0 1 500px;
+            margin: 0 20px;
+        }
+        .search-form {
+            display: flex;
+            border: 1px solid #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        .search-form:focus-within {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+            background: white;
+        }
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            padding-left: 16px;
+            flex: 1;
+        }
+        .search-icon {
+            color: #94a3b8;
+        }
+        .search-form input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: #1e293b;
+            outline: none;
+        }
+        .search-form input::placeholder {
+            color: #94a3b8;
+        }
+        .search-form button {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 0 22px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .search-form button:hover {
+            background: #0ea5e9;
+        }
+
+        /* Nav Actions */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .favorites-link {
+            position: relative;
+            cursor: pointer;
+            color: #64748b;
+            transition: color 0.2s;
+        }
+        .favorites-link:hover {
+            color: #0f172a;
+        }
+        .favorites-link .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border-radius: 9999px;
+            padding: 2px 5px;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .cart-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .cart-link:hover {
+            color: #0f172a;
+        }
+        .cart-icon-wrapper {
+            position: relative;
+        }
+        .cart-icon-wrapper .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: #0ea5e9;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border-radius: 9999px;
+            padding: 2px 5px;
+            min-width: 16px;
+            text-align: center;
+        }
+        .cart-text {
+            font-weight: 600;
+        }
+
+        /* User Menu & Dropdown */
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .user-info-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: #e2e8f0;
+            color: #475569;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: 2px solid #cbd5e1;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .user-welcome {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            line-height: 1;
+        }
+        .username-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #334155;
+            line-height: 1.3;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 8px;
+            background-color: white;
+            min-width: 150px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 10;
+            border: 1px solid #f1f5f9;
+        }
+        .user-menu:hover .dropdown-content {
+            display: block;
+            margin-top: 0;
+        }
+        .logout-btn {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: #ef4444;
+            cursor: pointer;
+            font-weight: 500;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .logout-btn:hover {
+            background-color: #fef2f2;
+        }
+
+        /* Hero Banner Section */
+        .hero-banner {
+            display: flex;
+            background: #e2e8f0;
+            border-radius: 0 0 24px 24px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            align-items: stretch;
+            min-height: 380px;
+        }
+        .hero-content {
+            flex: 1;
+            padding: 48px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(90deg, rgba(226,232,240,1) 0%, rgba(226,232,240,0.85) 70%, rgba(226,232,240,0) 100%);
+            z-index: 2;
+        }
+        .breadcrumbs {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #0f172a;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        .hero-title .highlight {
+            font-weight: 400;
+            font-style: italic;
+            color: #475569;
+        }
+        .hero-subtext {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            letter-spacing: 0.2em;
+            margin-bottom: 20px;
+        }
+        .hero-labels {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .limited {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 4px;
+            letter-spacing: 0.05em;
+        }
+        .scroll-down {
+            position: absolute;
+            right: 40px;
+            bottom: 40px;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(15, 23, 42, 0.15);
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .scroll-down:hover {
+            background: #0f172a;
+            color: white;
+            transform: translateY(4px);
+        }
+
+        .hero-image-container {
+            flex: 1.2;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+        }
+
+        /* Split Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 80px 40px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+        }
+
+        /* Sidebar Filters */
+        .sidebar-filters {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #f1f5f9;
+            align-self: start;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
+        }
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .filter-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .advanced-link {
+            font-size: 0.8rem;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .advanced-link:hover {
+            color: #0284c7;
+        }
+
+        .filter-section {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+        .arrow-down {
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+
+        .brand-search input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            font-family: inherit;
+            outline: none;
+        }
+        .brand-search input:focus {
+            border-color: #38bdf8;
+        }
+
+        .brand-list {
+            list-style: none;
+        }
+        .brand-list li {
+            margin-bottom: 8px;
+        }
+        .brand-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .brand-item input {
+            margin-right: 10px;
+            accent-color: #38bdf8;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+        .brand-item .count {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        /* Price Range Slider Simulator */
+        .price-slider-visual {
+            margin: 10px 0 16px 0;
+        }
+        .slider-chart {
+            width: 100%;
+            height: 28px;
+        }
+        .price-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .price-inputs input {
+            flex: 1;
+            width: 100px;
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+            color: #334155;
+            outline: none;
+            background: #f8fafc;
+        }
+        .price-inputs span {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Size options grid */
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .size-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 6px 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #475569;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .size-btn:hover {
+            border-color: #0f172a;
+            color: #0f172a;
+        }
+        .size-btn.active {
+            background: #0f172a;
+            border-color: #0f172a;
+            color: white;
+        }
+
+        /* Color Options flex */
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 9999px;
+            border: 1px solid rgba(15,23,42,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .color-dot.active {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #0f172a;
+        }
+        .color-black { background: #0f172a; }
+        .color-white { background: #ffffff; }
+        .color-red { background: #ef4444; }
+        .color-yellow { background: #eab308; }
+        .color-green { background: #22c55e; }
+        .color-blue { background: #3b82f6; }
+        .color-purple { background: #a855f7; }
+        .color-orange { background: #f97316; }
+
+        /* Right main area */
+        .products-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Controls row */
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .results-count {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #64748b;
+        }
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .layout-toggle {
+            display: flex;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .layout-btn {
+            background: white;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .layout-btn:hover {
+            color: #0f172a;
+        }
+        .layout-btn.active {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .sort-dropdown {
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            background: white;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 24px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 8px 16px -8px rgba(15, 23, 42, 0.04);
+            border-color: #cbd5e1;
+        }
+
+        .product-image-container {
+            position: relative;
+            background: #f8fafc;
+            aspect-ratio: 1.1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .product-card-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+            padding: 15px;
+        }
+        .product-card:hover .product-card-image {
+            transform: scale(1.05);
+        }
+
+        .arrival-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: #0ea5e9;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            letter-spacing: 0.02em;
+            z-index: 2;
+            box-shadow: 0 2px 6px rgba(56, 189, 248, 0.2);
+        }
+
+        .favorite-btn {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            background: white;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            z-index: 2;
+        }
+        .favorite-btn:hover {
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .product-details {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-brand {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #94a3b8;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .product-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            height: 40px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .price-stock-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0ea5e9;
+        }
+
+        .stock {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .in-stock {
+            color: #10b981;
+            background: #ecfdf5;
+        }
+        .low-stock {
+            color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 10px 0;
+            background: #0f172a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05);
+        }
+        .add-btn:hover:not(:disabled) {
+            background: #0284c7;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+        }
+        .add-btn:disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Empty message style */
+        .empty-message {
+            text-align: center;
+            padding: 60px 40px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+            grid-column: 1 / -1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-filters {
+                display: none;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 16px 20px;
+            }
+            .nav-center {
+                display: none;
+            }
+            .hero-banner {
+                flex-direction: column;
+            }
+            .hero-content {
+                padding: 35px 24px;
+            }
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            .main-container {
+                padding: 0 20px 40px 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>E-Commerce Shop</h1>
-        <a href="/cart" class="cart-link" id="cart-link">
-            Giỏ hàng (<span id="cart-count" th:text="${cartItemCount}">0</span>)
-        </a>
-    </div>
-
-    <form th:action="@{/}" method="get" class="search-bar">
-        <input type="text" id="search-input" name="keyword" placeholder="Tìm kiếm sản phẩm..."
-               th:value="${keyword}">
-        <button type="submit" id="search-btn">Tìm kiếm</button>
-    </form>
-
-    <div id="product-list" class="product-grid">
-        <div th:each="product : ${products}" class="product-card" th:id="'product-' + ${product.id}">
-            <span class="category" th:text="${product.category}">Category</span>
-            <h3 class="product-name" th:text="${product.name}">Product Name</h3>
-            <p class="price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</p>
-            <p class="stock" th:text="'Còn lại: ' + ${product.stock}">Còn lại: 0</p>
-            <form th:action="@{'/add-to-cart/' + ${product.id}}" method="post">
-                <button type="submit" class="add-btn"
-                        th:id="'add-to-cart-' + ${product.id}"
-                        th:disabled="${product.stock == 0}">
-                    <span th:if="${product.stock > 0}">Thêm vào giỏ</span>
-                    <span th:if="${product.stock == 0}">Hết hàng</span>
-                </button>
-            </form>
+    <!-- Top utility promo bar -->
+    <div class="promo-bar">
+        <div class="promo-left">Giao hàng đến: <strong>Việt Nam 🇻🇳</strong></div>
+        <div class="promo-right">
+            <span>Vận Chuyển Uy Tín</span> | 
+            <span>Đổi Trả Dễ Dàng</span> | 
+            <span>Thanh Toán Bảo Mật</span>
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(products)}" class="empty-message" id="empty-message">
-        Không tìm thấy sản phẩm nào.
+    <!-- Main Navigation Bar -->
+    <nav class="navbar" data-testid="header">
+        <div class="nav-left">
+            <a href="/" class="logo">
+                <span class="logo-icon">S</span>stella
+            </a>
+        </div>
+        
+        <div class="nav-center">
+            <form th:action="@{/}" method="get" class="search-form" data-testid="search-form">
+                <div class="search-wrapper">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="search-input" name="keyword" placeholder="Bạn đang tìm kiếm sản phẩm gì?"
+                           th:value="${keyword}" data-testid="search-input">
+                </div>
+                <button type="submit" id="search-btn" data-testid="search-button">Tìm kiếm</button>
+            </form>
+        </div>
+        
+        <div class="nav-right">
+            <div class="favorites-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                <span class="badge">3</span>
+            </div>
+            
+            <a href="/cart" class="cart-link" id="cart-link" data-testid="cart-link">
+                <div class="cart-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                    <span class="badge" id="cart-count" data-testid="cart-count" th:text="${cartItemCount}">0</span>
+                </div>
+                <span class="cart-text">Giỏ hàng</span>
+            </a>
+
+            <div class="user-menu">
+                <div class="user-info-trigger">
+                    <div class="avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
+                    <div class="user-details">
+                        <span class="user-welcome">Xin chào,</span>
+                        <span class="username-text" data-testid="user-info" th:text="${username}">User</span>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button type="submit" class="logout-btn" data-testid="logout-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Beautiful Large Banner Section -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <div class="breadcrumbs">Trang chủ &gt; Sản phẩm</div>
+            <h1 class="hero-title">Simple <br><span class="highlight">is More</span></h1>
+            <div class="hero-subtext">DESIGNED TO STAND OUT</div>
+            <div class="hero-labels">
+                <span class="limited">LIMITED-EDITIONS STYLES</span>
+            </div>
+            <div class="scroll-down">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+            </div>
+        </div>
+        <div class="hero-image-container">
+            <img th:src="@{/images/fashion_banner.png}" alt="Stella Fashion Banner" class="hero-image">
+        </div>
+    </section>
+
+    <!-- Main Workspace: Sidebar & Grid -->
+    <div class="main-container">
+        <!-- Sidebar filters panel -->
+        <aside class="sidebar-filters">
+            <div class="filter-header">
+                <h2>Bộ lọc</h2>
+                <a href="#" class="advanced-link">Nâng cao</a>
+            </div>
+
+            <!-- Brand Section -->
+            <div class="filter-section">
+                <h3 class="section-title">Thương hiệu <span class="arrow-down">▼</span></h3>
+                <div class="brand-search">
+                    <input type="text" placeholder="Tìm thương hiệu...">
+                </div>
+                <ul class="brand-list">
+                    <li>
+                        <label class="brand-item">
+                            <input type="checkbox" checked>
+                            <span>Nike</span>
+                            <span class="count">123</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="brand-item">
+                            <input type="checkbox" checked>
+                            <span>ASUS</span>
+                            <span class="count">65</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="brand-item">
+                            <input type="checkbox" checked>
+                            <span>Apple</span>
+                            <span class="count">99</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="brand-item">
+                            <input type="checkbox">
+                            <span>Adidas</span>
+                            <span class="count">55</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="brand-item">
+                            <input type="checkbox">
+                            <span>Puma</span>
+                            <span class="count">325</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="brand-item">
+                            <input type="checkbox">
+                            <span>Uniqlo</span>
+                            <span class="count">61</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Price Section -->
+            <div class="filter-section">
+                <h3 class="section-title">Giá bán <span class="arrow-down">▼</span></h3>
+                <div class="price-slider-visual">
+                    <svg viewBox="0 0 100 20" class="slider-chart">
+                        <path d="M 0,20 Q 20,5 40,15 T 80,10 T 100,20 Z" fill="rgba(14, 165, 233, 0.15)"></path>
+                        <line x1="0" y1="18" x2="100" y2="18" stroke="#e2e8f0" stroke-width="2"></line>
+                        <line x1="20" y1="18" x2="80" y2="18" stroke="#0ea5e9" stroke-width="2"></line>
+                        <circle cx="20" cy="18" r="4" fill="#0ea5e9"></circle>
+                        <circle cx="80" cy="18" r="4" fill="#0ea5e9"></circle>
+                    </svg>
+                </div>
+                <div class="price-inputs">
+                    <input type="text" value="0 đ" readonly>
+                    <span>đến</span>
+                    <input type="text" value="50.000.000 đ" readonly>
+                </div>
+            </div>
+
+            <!-- Size Section -->
+            <div class="filter-section">
+                <h3 class="section-title">Kích cỡ <span class="arrow-down">▼</span></h3>
+                <div class="size-options">
+                    <button type="button" class="size-btn active">XXS</button>
+                    <button type="button" class="size-btn">XS</button>
+                    <button type="button" class="size-btn">S</button>
+                    <button type="button" class="size-btn">M</button>
+                    <button type="button" class="size-btn">L</button>
+                    <button type="button" class="size-btn">XL</button>
+                    <button type="button" class="size-btn">XXL</button>
+                </div>
+            </div>
+
+            <!-- Color Section -->
+            <div class="filter-section">
+                <h3 class="section-title">Màu sắc <span class="arrow-down">▼</span></h3>
+                <div class="color-options">
+                    <span class="color-dot color-black active"></span>
+                    <span class="color-dot color-white"></span>
+                    <span class="color-dot color-red"></span>
+                    <span class="color-dot color-yellow"></span>
+                    <span class="color-dot color-green"></span>
+                    <span class="color-dot color-blue"></span>
+                    <span class="color-dot color-purple"></span>
+                    <span class="color-dot color-orange"></span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Product Area -->
+        <main class="products-area">
+            <!-- Controls row -->
+            <div class="controls-row">
+                <div class="results-count">
+                    <span th:text="${products.size()} + ' kết quả được tìm thấy'">0 kết quả</span>
+                </div>
+                <div class="controls-right">
+                    <div class="layout-toggle">
+                        <button type="button" class="layout-btn active">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </button>
+                        <button type="button" class="layout-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        </button>
+                    </div>
+                    <div class="sort-dropdown">
+                        Sắp xếp: <strong>Mặc định</strong> ▼
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-list" class="product-grid" data-testid="product-list">
+                <div th:each="product : ${products}" class="product-card"
+                     th:id="'product-' + ${product.id}"
+                     th:data-testid="'product-card-' + ${product.id}">
+                    
+                    <div class="product-image-container">
+                        <span class="arrival-badge">New Arrival</span>
+                        
+                        <!-- High-quality generated product images resolved dynamically -->
+                        <img th:src="${product.id == 1 ? '/images/asus_laptop.png' :
+                                      product.id == 2 ? '/images/iphone_15.png' :
+                                      product.id == 3 ? '/images/sony_headphone.png' :
+                                      product.id == 4 ? '/images/cotton_tshirt.png' :
+                                      product.id == 5 ? '/images/levis_jeans.png' :
+                                      product.id == 6 ? '/images/nike_airmax.png' : '/images/fashion_banner.png'}"
+                             alt="Product Image" class="product-card-image">
+                        
+                        <button type="button" class="favorite-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="product-details">
+                        <span class="product-brand" th:text="${product.category}" data-testid="product-category">Category</span>
+                        <h3 class="product-name" th:text="${product.name}" data-testid="product-name">Product Name</h3>
+                        
+                        <div class="price-stock-row">
+                            <p class="price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+                               data-testid="product-price">0 VND</p>
+                            
+                            <p class="stock" th:classappend="${product.stock <= 20} ? 'low-stock' : 'in-stock'"
+                               th:text="'Còn lại: ' + ${product.stock}"
+                               data-testid="product-stock">Còn lại: 0</p>
+                        </div>
+
+                        <form th:action="@{'/add-to-cart/' + ${product.id}}" method="post">
+                            <button type="submit" class="add-btn"
+                                    th:id="'add-to-cart-' + ${product.id}"
+                                    th:data-testid="'add-to-cart-' + ${product.id}"
+                                    th:disabled="${product.stock == 0}">
+                                <span th:if="${product.stock > 0}">Thêm vào giỏ</span>
+                                <span th:if="${product.stock == 0}">Hết hàng</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty message if no products found -->
+            <div th:if="${#lists.isEmpty(products)}" class="empty-message" id="empty-message"
+                 data-testid="empty-message">
+                Không tìm thấy sản phẩm nào phù hợp với từ khóa của bạn.
+            </div>
+        </main>
     </div>
 </body>
 </html>

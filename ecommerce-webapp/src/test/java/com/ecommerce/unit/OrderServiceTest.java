@@ -223,4 +223,121 @@ class OrderServiceTest {
         assertTrue(exception.getMessage().contains("hết hạn"));
         verify(orderRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("Xác nhận đơn hàng PENDING - thành công")
+    void test_confirmOrder_pendingStatus_shouldConfirmSuccessfully() {
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+        order.setStatus(OrderStatus.PENDING);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+        Order result = orderService.confirmOrder(1L);
+
+        assertEquals(OrderStatus.CONFIRMED, result.getStatus());
+        verify(orderRepository).save(order);
+    }
+
+    @Test
+    @DisplayName("Xác nhận đơn hàng không phải PENDING - ném exception")
+    void test_confirmOrder_nonPendingStatus_shouldThrowException() {
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+        InvalidOrderStateException exception = assertThrows(InvalidOrderStateException.class,
+                () -> orderService.confirmOrder(1L));
+        assertTrue(exception.getMessage().contains("Không thể xác nhận"));
+        verify(orderRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Giao đơn hàng CONFIRMED - thành công")
+    void test_shipOrder_confirmedStatus_shouldShipSuccessfully() {
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+        Order result = orderService.shipOrder(1L);
+
+        assertEquals(OrderStatus.SHIPPED, result.getStatus());
+        verify(orderRepository).save(order);
+    }
+
+    @Test
+    @DisplayName("Giao đơn hàng không phải CONFIRMED - ném exception")
+    void test_shipOrder_nonConfirmedStatus_shouldThrowException() {
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+        order.setStatus(OrderStatus.PENDING);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+        InvalidOrderStateException exception = assertThrows(InvalidOrderStateException.class,
+                () -> orderService.shipOrder(1L));
+        assertTrue(exception.getMessage().contains("Không thể giao hàng"));
+        verify(orderRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Hoàn tất giao đơn hàng SHIPPED - thành công")
+    void test_deliverOrder_shippedStatus_shouldDeliverSuccessfully() {
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+        order.setStatus(OrderStatus.SHIPPED);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+        Order result = orderService.deliverOrder(1L);
+
+        assertEquals(OrderStatus.DELIVERED, result.getStatus());
+        verify(orderRepository).save(order);
+    }
+
+    @Test
+    @DisplayName("Hoàn tất giao đơn hàng không phải SHIPPED - ném exception")
+    void test_deliverOrder_nonShippedStatus_shouldThrowException() {
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+        InvalidOrderStateException exception = assertThrows(InvalidOrderStateException.class,
+                () -> orderService.deliverOrder(1L));
+        assertTrue(exception.getMessage().contains("Không thể hoàn tất giao hàng"));
+        verify(orderRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Tìm đơn hàng theo ID tồn tại - thành công")
+    void test_findById_existingOrder_shouldReturnSuccessfully() {
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+        Order result = orderService.findById(1L);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+    }
+
+    @Test
+    @DisplayName("Tìm đơn hàng theo ID không tồn tại - ném exception")
+    void test_findById_nonExistentOrder_shouldThrowException() {
+        when(orderRepository.findById(999L)).thenReturn(Optional.empty());
+
+        OrderNotFoundException exception = assertThrows(OrderNotFoundException.class,
+                () -> orderService.findById(999L));
+        assertTrue(exception.getMessage().contains("Không tìm thấy đơn hàng"));
+    }
 }

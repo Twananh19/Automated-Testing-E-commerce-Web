@@ -25,18 +25,18 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Giỏ hàng</h1>
-        <a href="/" class="back-link">Tiếp tục mua sắm</a>
+    <div class="header" data-testid="header">
+        <h1 data-testid="page-title">Giỏ hàng</h1>
+        <a href="/" class="back-link" data-testid="continue-shopping-link">Tiếp tục mua sắm</a>
     </div>
 
-    <div class="cart-container">
-        <div th:if="${cartEmpty}" class="empty-cart" id="empty-cart">
+    <div class="cart-container" data-testid="cart-container">
+        <div th:if="${cartEmpty}" class="empty-cart" id="empty-cart" data-testid="empty-cart">
             <p>Giỏ hàng trống.</p>
             <p><a href="/">Quay lại mua sắm</a></p>
         </div>
 
-        <div th:unless="${cartEmpty}" id="cart-items">
+        <div th:unless="${cartEmpty}" id="cart-items" data-testid="cart-items">
             <table>
                 <thead>
                     <tr>
@@ -48,31 +48,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="item : ${cart.items}" th:id="'cart-item-' + ${item.productId}">
-                        <td th:text="${item.productName}">Product Name</td>
-                        <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</td>
-                        <td th:text="${item.quantity}">1</td>
-                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</td>
+                    <tr th:each="item : ${cart.items}" th:id="'cart-item-' + ${item.productId}"
+                        th:data-testid="'cart-item-' + ${item.productId}">
+                        <td th:text="${item.productName}" data-testid="item-name">Product Name</td>
+                        <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+                            data-testid="item-price">0 VND</td>
+                        <td th:text="${item.quantity}" data-testid="item-quantity">1</td>
+                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+                            data-testid="item-subtotal">0 VND</td>
                         <td>
                             <form th:action="@{'/cart/remove/' + ${item.productId}}" method="post">
                                 <button type="submit" class="remove-btn"
-                                        th:id="'remove-' + ${item.productId}">Xóa</button>
+                                        th:id="'remove-' + ${item.productId}"
+                                        th:data-testid="'remove-item-' + ${item.productId}">Xóa</button>
                             </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <div class="total-row">
-                Tổng cộng: <span id="cart-total"
+            <div class="total-row" data-testid="cart-total-row">
+                Tổng cộng: <span id="cart-total" data-testid="cart-total"
                     th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
             </div>
 
             <div class="actions">
                 <form th:action="@{/cart/clear}" method="post">
-                    <button type="submit" class="btn btn-clear" id="clear-cart-btn">Xóa giỏ hàng</button>
+                    <button type="submit" class="btn btn-clear" id="clear-cart-btn"
+                            data-testid="clear-cart-button">Xóa giỏ hàng</button>
                 </form>
-                <a href="/checkout" class="btn btn-checkout" id="checkout-btn">Thanh toán</a>
+                <a href="/checkout" class="btn btn-checkout" id="checkout-btn"
+                   data-testid="checkout-button">Thanh toán</a>
             </div>
         </div>
     </div>

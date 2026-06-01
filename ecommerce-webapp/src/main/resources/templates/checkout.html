@@ -28,45 +28,53 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Thanh toán</h1>
-        <a href="/cart" class="back-link">Quay lại giỏ hàng</a>
+    <div class="header" data-testid="header">
+        <h1 data-testid="page-title">Thanh toán</h1>
+        <a href="/cart" class="back-link" data-testid="back-to-cart-link">Quay lại giỏ hàng</a>
     </div>
 
-    <div class="checkout-container">
-        <div th:if="${warning}" class="warning" id="checkout-warning" th:text="${warning}"></div>
+    <div class="checkout-container" data-testid="checkout-container">
+        <div th:if="${warning}" class="warning" id="checkout-warning"
+             data-testid="checkout-warning" th:text="${warning}"></div>
 
         <div th:unless="${cart.items.isEmpty()}">
-            <h2>Chi tiết đơn hàng</h2>
-            <div class="order-summary">
+            <h2 data-testid="order-details-title">Chi tiết đơn hàng</h2>
+            <div class="order-summary" data-testid="order-summary">
                 <table>
-                    <tr th:each="item : ${cart.items}">
-                        <td th:text="${item.productName}">Product</td>
-                        <td th:text="'x' + ${item.quantity}">x1</td>
-                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</td>
+                    <tr th:each="item : ${cart.items}"
+                        th:data-testid="'order-item-' + ${item.productId}">
+                        <td th:text="${item.productName}" data-testid="order-item-name">Product</td>
+                        <td th:text="'x' + ${item.quantity}" data-testid="order-item-qty">x1</td>
+                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+                            data-testid="order-item-subtotal">0 VND</td>
                     </tr>
                 </table>
             </div>
 
-            <div class="order-total">
-                Tổng tiền: <span id="order-total"
+            <div class="order-total" data-testid="order-total-section">
+                Tổng tiền: <span id="order-total" data-testid="order-total"
                     th:text="${discountedTotal != null ? #numbers.formatDecimal(discountedTotal, 0, 'COMMA', 0, 'POINT') + ' VND' : #numbers.formatDecimal(orderTotal, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</span>
             </div>
 
-            <div class="voucher-section">
+            <div class="voucher-section" data-testid="voucher-section">
                 <h3>Mã giảm giá</h3>
-                <form th:action="@{/checkout/apply-voucher}" method="post" class="voucher-form">
+                <form th:action="@{/checkout/apply-voucher}" method="post" class="voucher-form"
+                      data-testid="voucher-form">
                     <input type="text" id="voucher-input" name="voucherCode" placeholder="Nhập mã voucher..."
-                           th:value="${voucherCode}">
-                    <button type="submit" id="apply-voucher-btn">Áp dụng</button>
+                           th:value="${voucherCode}" data-testid="voucher-input">
+                    <button type="submit" id="apply-voucher-btn"
+                            data-testid="apply-voucher-button">Áp dụng</button>
                 </form>
-                <p th:if="${voucherSuccess}" class="voucher-success" id="voucher-message" th:text="${voucherSuccess}"></p>
-                <p th:if="${voucherError}" class="voucher-error" id="voucher-message" th:text="${voucherError}"></p>
+                <p th:if="${voucherSuccess}" class="voucher-success" id="voucher-message"
+                   data-testid="voucher-success-message" th:text="${voucherSuccess}"></p>
+                <p th:if="${voucherError}" class="voucher-error" id="voucher-message"
+                   data-testid="voucher-error-message" th:text="${voucherError}"></p>
             </div>
 
-            <form th:action="@{/checkout/place-order}" method="post">
+            <form th:action="@{/checkout/place-order}" method="post" data-testid="place-order-form">
                 <input type="hidden" name="orderId" th:value="${orderId}">
-                <button type="submit" class="place-order-btn" id="place-order-btn">Đặt hàng</button>
+                <button type="submit" class="place-order-btn" id="place-order-btn"
+                        data-testid="place-order-button">Đặt hàng</button>
             </form>
         </div>
     </div>
