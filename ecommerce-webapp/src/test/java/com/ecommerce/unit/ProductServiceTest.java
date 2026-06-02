@@ -148,4 +148,102 @@ class ProductServiceTest {
                 () -> productService.calculateDiscountedPrice(product, 150.0));
         assertEquals("Phần trăm giảm giá phải từ 0 đến 100", exception.getMessage());
     }
+
+    // ========== BỔ SUNG: BVA Boundary Tests ==========
+
+    @Test
+    @DisplayName("BVA: Thêm sản phẩm với giá = 0 — ném exception (boundary)")
+    void test_addProduct_withZeroPrice_shouldThrowException_BVA() {
+        // Arrange
+        Product product = new Product("Laptop", 0, 10, "Electronics");
+
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> productService.addProduct(product));
+        assertEquals("Giá sản phẩm phải lớn hơn 0", exception.getMessage());
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("BVA: Thêm sản phẩm với stock âm — ném exception")
+    void test_addProduct_withNegativeStock_shouldThrowException_BVA() {
+        // Arrange
+        Product product = new Product("Laptop", 25000000, -1, "Electronics");
+
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> productService.addProduct(product));
+        assertEquals("Tồn kho không được âm", exception.getMessage());
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("BVA: Tính giá giảm 0% — trả về giá gốc (boundary dưới)")
+    void test_calculateDiscount_zeroPercent_shouldReturnOriginalPrice_BVA() {
+        // Arrange
+        Product product = new Product("Laptop", 1000000, 10, "Electronics");
+
+        // Act
+        double result = productService.calculateDiscountedPrice(product, 0.0);
+
+        // Assert
+        assertEquals(1000000, result, 0.01);
+    }
+
+    @Test
+    @DisplayName("BVA: Tính giá giảm 100% — trả về 0 (boundary trên)")
+    void test_calculateDiscount_100percent_shouldReturnZero_BVA() {
+        // Arrange
+        Product product = new Product("Laptop", 1000000, 10, "Electronics");
+
+        // Act
+        double result = productService.calculateDiscountedPrice(product, 100.0);
+
+        // Assert
+        assertEquals(0.0, result, 0.01);
+    }
+
+    @Test
+    @DisplayName("BVA: Tính giá giảm âm — ném exception (boundary dưới invalid)")
+    void test_calculateDiscount_negativePercent_shouldThrowException_BVA() {
+        // Arrange
+        Product product = new Product("Laptop", 1000000, 10, "Electronics");
+
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> productService.calculateDiscountedPrice(product, -1.0));
+        assertEquals("Phần trăm giảm giá phải từ 0 đến 100", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Tìm kiếm theo tên với keyword rỗng — trả về tất cả sản phẩm")
+    void test_searchByName_emptyKeyword_shouldReturnAll() {
+        // Arrange
+        List<Product> allProducts = Arrays.asList(
+                new Product("Laptop", 25000000, 10, "Electronics"),
+                new Product("Phone", 15000000, 20, "Electronics")
+        );
+        when(productRepository.findAll()).thenReturn(allProducts);
+
+        // Act
+        List<Product> result = productService.searchByName("");
+
+        // Assert
+        assertEquals(2, result.size());
+        verify(productRepository).findAll();
+        verify(productRepository, never()).findByNameContainingIgnoreCase(any());
+    }
+
+    @Test
+    @DisplayName("Thêm sản phẩm với tên null — ném exception")
+    void test_addProduct_withNullName_shouldThrowException() {
+        // Arrange
+        Product product = new Product(null, 25000000, 10, "Electronics");
+
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> productService.addProduct(product));
+        assertEquals("Tên sản phẩm không được để trống", exception.getMessage());
+        verify(productRepository, never()).save(any());
+    }
 }

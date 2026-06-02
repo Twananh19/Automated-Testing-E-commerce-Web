@@ -340,4 +340,134 @@ class OrderServiceTest {
                 () -> orderService.findById(999L));
         assertTrue(exception.getMessage().contains("Không tìm thấy đơn hàng"));
     }
+
+    // ========== BỔ SUNG: Empty/Null Cart Tests ==========
+
+    @Test
+    @DisplayName("Tạo đơn hàng với giỏ hàng trống (empty list) - ném exception")
+    void test_createOrder_emptyCart_shouldThrowException() {
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> orderService.createOrder("user1", Collections.emptyList()));
+        assertTrue(exception.getMessage().contains("Giỏ hàng trống"));
+        verify(orderRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Tạo đơn hàng với null cart items - ném exception")
+    void test_createOrder_nullCart_shouldThrowException() {
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> orderService.createOrder("user1", null));
+        assertTrue(exception.getMessage().contains("Giỏ hàng trống"));
+        verify(orderRepository, never()).save(any());
+    }
+
+    // ========== BỔ SUNG: BVA Boundary Tests cho calculateOrderTotal ==========
+
+    @Test
+    @DisplayName("BVA: Tính tổng tiền chính xác 9 items - KHÔNG giảm giá (boundary dưới)")
+    void test_calculateTotal_exactly9Items_noDiscount_BVA() {
+        // Arrange — 9 items total (just below 10 boundary)
+        List<OrderItem> items = Arrays.asList(
+                new OrderItem(1L, "Product A", 100000, 9)
+        );
+
+        // Act
+        double total = orderService.calculateOrderTotal(items);
+
+        // Assert — no discount
+        assertEquals(900000, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("BVA: Tính tổng tiền chính xác 10 items - giảm 5% (boundary chính xác)")
+    void test_calculateTotal_exactly10Items_5percentDiscount_BVA() {
+        // Arrange — exactly 10 items (boundary)
+        List<OrderItem> items = Arrays.asList(
+                new OrderItem(1L, "Product A", 100000, 10)
+        );
+
+        // Act
+        double total = orderService.calculateOrderTotal(items);
+
+        // Assert — 5% discount
+        double expected = 1000000 * 0.95;
+        assertEquals(expected, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("BVA: Tính tổng tiền chính xác 19 items - giảm 5% (boundary trên của bracket 5%)")
+    void test_calculateTotal_exactly19Items_5percentDiscount_BVA() {
+        // Arrange — 19 items (just below 20 boundary)
+        List<OrderItem> items = Arrays.asList(
+                new OrderItem(1L, "Product A", 100000, 19)
+        );
+
+        // Act
+        double total = orderService.calculateOrderTotal(items);
+
+        // Assert — still 5% discount
+        double expected = 1900000 * 0.95;
+        assertEquals(expected, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("BVA: Tính tổng tiền chính xác 20 items - giảm 10% (boundary chính xác)")
+    void test_calculateTotal_exactly20Items_10percentDiscount_BVA() {
+        // Arrange — exactly 20 items (boundary)
+        List<OrderItem> items = Arrays.asList(
+                new OrderItem(1L, "Product A", 100000, 20)
+        );
+
+        // Act
+        double total = orderService.calculateOrderTotal(items);
+
+        // Assert — 10% discount
+        double expected = 2000000 * 0.90;
+        assertEquals(expected, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Tính tổng tiền với danh sách null - trả về 0")
+    void test_calculateTotal_nullItems_shouldReturnZero() {
+        double total = orderService.calculateOrderTotal(null);
+        assertEquals(0.0, total, 0.01);
+    }
+
+    // ========== BỔ SUNG: Thêm Voucher Tests ==========
+
+    @Test
+    @DisplayName("Áp dụng voucher SAVE20 - giảm 20%")
+    void test_applyVoucher_SAVE20_shouldDiscount20Percent() {
+        // Arrange
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+        // Act
+        Order result = orderService.applyVoucher(1L, "SAVE20");
+
+        // Assert
+        assertEquals(800000, result.getTotalAmount(), 0.01);
+    }
+
+    @Test
+    @DisplayName("Áp dụng voucher SAVE50 - giảm 50%")
+    void test_applyVoucher_SAVE50_shouldDiscount50Percent() {
+        // Arrange
+        Order order = new Order("user1", List.of(), 1000000);
+        order.setId(1L);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+        // Act
+        Order result = orderService.applyVoucher(1L, "SAVE50");
+
+        // Assert
+        assertEquals(500000, result.getTotalAmount(), 0.01);
+    }
 }

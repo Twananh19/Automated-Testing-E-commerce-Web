@@ -16,7 +16,7 @@ Dự án kiểm thử tự động cho ứng dụng web thương mại điện t
 | Integration Testing | MockMvc + @WebMvcTest | (via spring-boot-starter-test) |
 | E2E Testing | Selenium WebDriver | 4.27.0 |
 | Driver Management | WebDriverManager | 5.9.2 |
-| Code Coverage | JaCoCo | 0.8.11 |
+| Code Coverage | JaCoCo | 0.8.12 |
 | Mutation Testing | PIT | 1.15.3 |
 | Build Tool | Maven | 3.9+ |
 | CI/CD | GitHub Actions | - |
@@ -40,7 +40,8 @@ ecommerce-webapp/
 │   ├── requirements.md                 (Đặc tả yêu cầu)
 │   ├── test-plan.md                    (Kế hoạch kiểm thử IEEE 829)
 │   ├── test-case-spec.md               (Bảng test case)
-│   └── traceability-matrix.md          (Ma trận truy xuất)
+│   ├── traceability-matrix.md          (Ma trận truy xuất)
+│   └── demo-guide.md                   (Hướng dẫn demo)
 ├── src/
 │   ├── main/
 │   │   ├── java/com/ecommerce/
@@ -58,8 +59,8 @@ ecommerce-webapp/
 │   │       └── templates/
 │   └── test/
 │       ├── java/com/ecommerce/
-│       │   ├── unit/                    (Unit Tests — JUnit 5 + Mockito)
-│       │   ├── integration/             (Integration Tests — @WebMvcTest)
+│       │   ├── unit/                    (Unit Tests — JUnit 5 + Mockito + jqwik)
+│       │   ├── integration/             (Integration Tests — MockMvc)
 │       │   └── selenium/                (E2E Tests — Selenium WebDriver)
 │       └── resources/
 │           └── application-test.properties
@@ -109,13 +110,15 @@ mvn org.pitest:pitest-maven:mutationCoverage
 ## Testing Pyramid
 
 ```
-        /\
-       /E2E\          12-13 cases (Selenium WebDriver)
-      /──────\
-     / Integ  \       12-15 cases (@WebMvcTest + @DataJpaTest)
-    /──────────\
-   /  Unit Test  \    30-32 cases (JUnit 5 + Mockito + jqwik)
-  /──────────────\
+          /\
+         /E2E\          8 cases (Selenium WebDriver)
+        /──────\
+       / Integ  \       15 cases (MockMvc standalone)
+      /──────────\
+     / Unit+PBT   \    59 cases (JUnit 5 + Mockito + jqwik)
+    /──────────────\
+
+    Tổng: 82 test cases
 ```
 
 ## Kỹ thuật kiểm thử áp dụng

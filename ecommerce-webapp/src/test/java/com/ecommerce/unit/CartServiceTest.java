@@ -147,4 +147,82 @@ class CartServiceTest {
         double expected = 25000000 * 2 + 15000000 * 3;
         assertEquals(expected, total, 0.01);
     }
+
+    // ========== BỔ SUNG: BVA Boundary Tests ==========
+
+    @Test
+    @DisplayName("BVA: Thêm sản phẩm với số lượng = 0 — ném exception (boundary)")
+    void test_addToCart_zeroQuantity_shouldThrowException_BVA() {
+        // Arrange
+        Product product = new Product("Laptop", 25000000, 10, "Electronics");
+        product.setId(1L);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> cartService.addToCart("user_bva1", 1L, 0));
+        assertTrue(exception.getMessage().contains("Số lượng phải lớn hơn 0"));
+    }
+
+    @Test
+    @DisplayName("BVA: Thêm sản phẩm với số lượng âm — ném exception")
+    void test_addToCart_negativeQuantity_shouldThrowException_BVA() {
+        // Arrange
+        Product product = new Product("Laptop", 25000000, 10, "Electronics");
+        product.setId(1L);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> cartService.addToCart("user_bva2", 1L, -5));
+        assertTrue(exception.getMessage().contains("Số lượng phải lớn hơn 0"));
+    }
+
+    @Test
+    @DisplayName("Thêm sản phẩm không tồn tại vào giỏ — ném exception")
+    void test_addToCart_productNotFound_shouldThrowException() {
+        // Arrange
+        when(productRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> cartService.addToCart("user_notfound", 999L, 1));
+        assertTrue(exception.getMessage().contains("Sản phẩm không tồn tại"));
+    }
+
+    @Test
+    @DisplayName("Xóa sản phẩm khỏi giỏ của user không tồn tại — ném exception")
+    void test_removeFromCart_nonExistentUser_shouldThrowException() {
+        // Act & Assert
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> cartService.removeFromCart("non_existent_user", 1L));
+        assertTrue(exception.getMessage().contains("Giỏ hàng của người dùng không tồn tại"));
+    }
+
+    @Test
+    @DisplayName("Tính tổng tiền giỏ hàng trống — trả về 0")
+    void test_getCartTotal_emptyCart_shouldReturnZero() {
+        // Act
+        double total = cartService.getCartTotal("empty_cart_user");
+
+        // Assert
+        assertEquals(0.0, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Thêm cùng sản phẩm 2 lần — cộng dồn số lượng")
+    void test_addToCart_sameProductTwice_shouldAccumulateQuantity() {
+        // Arrange
+        Product product = new Product("Laptop", 25000000, 10, "Electronics");
+        product.setId(1L);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        // Act
+        cartService.addToCart("user_accumulate", 1L, 2);
+        Cart result = cartService.addToCart("user_accumulate", 1L, 3);
+
+        // Assert
+        assertEquals(1, result.getItems().size());
+        assertEquals(5, result.getItems().get(0).getQuantity());
+    }
 }

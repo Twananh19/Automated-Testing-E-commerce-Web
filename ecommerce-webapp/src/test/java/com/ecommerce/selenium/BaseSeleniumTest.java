@@ -56,13 +56,7 @@ public abstract class BaseSeleniumTest {
         }
     }
 
-    private boolean isTestFailed(TestInfo testInfo) {
-        try {
-            return false;
-        } catch (Exception e) {
-            return true;
-        }
-    }
+
 
     protected void takeScreenshot(String testName) {
         try {
