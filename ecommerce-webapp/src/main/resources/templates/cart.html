@@ -3,84 +3,1020 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giỏ hàng</title>
+    <meta name="description" content="Giỏ hàng - Stella E-commerce">
+    <title>Giỏ hàng — Stella</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <style>
+        /* ==========================================
+           RESET & BASE
+           ========================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #2c3e50; color: white; border-radius: 8px; margin-bottom: 20px; }
-        .header h1 { font-size: 1.5rem; }
-        .back-link { color: white; text-decoration: none; background: #3498db; padding: 8px 16px; border-radius: 4px; }
-        .cart-container { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; font-weight: 600; }
-        .remove-btn { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        .total-row { font-size: 1.3rem; font-weight: bold; text-align: right; padding: 15px 0; border-top: 2px solid #2c3e50; }
-        .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-        .btn { padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; text-decoration: none; color: white; }
-        .btn-checkout { background: #27ae60; }
-        .btn-clear { background: #e74c3c; }
-        .empty-cart { text-align: center; padding: 40px; color: #7f8c8d; }
-        .empty-cart a { color: #3498db; text-decoration: none; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #faf9f6;
+            color: #1a1a1a;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f5f3ef; }
+        ::-webkit-scrollbar-thumb { background: #c4b998; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a89970; }
+
+        a { text-decoration: none; color: inherit; }
+        button { font-family: inherit; cursor: pointer; }
+        img { max-width: 100%; display: block; }
+
+        .container { max-width: 1340px; margin: 0 auto; padding: 0 40px; }
+
+        /* ==========================================
+           NAVBAR
+           ========================================== */
+        .navbar {
+            background: #ffffff;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-left { display: flex; align-items: center; gap: 48px; }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .nav-links { display: flex; list-style: none; gap: 32px; }
+        .nav-links a {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #555;
+            transition: color 0.2s;
+            position: relative;
+            padding: 4px 0;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2d4a3e;
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: #1a1a1a; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: #2d4a3e; font-weight: 600; }
+        .nav-links a.active::after { width: 100%; }
+
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-icon-btn {
+            background: none;
+            border: none;
+            color: #555;
+            padding: 8px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .nav-icon-btn:hover { color: #1a1a1a; }
+
+        .user-menu { position: relative; }
+        .user-info-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .user-info-trigger:hover { background: #f5f3ef; }
+        .avatar {
+            width: 34px;
+            height: 34px;
+            background: #2d4a3e;
+            color: #f0e6d3;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .user-details { display: flex; flex-direction: column; text-align: left; }
+        .user-welcome { font-size: 0.68rem; color: #999; line-height: 1; }
+        .username-text { font-size: 0.8rem; font-weight: 600; color: #333; line-height: 1.3; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 4px;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 10;
+            border: 1px solid #f0ece4;
+        }
+        .user-menu:hover .dropdown-content { display: block; }
+        .logout-btn {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: #c9553a;
+            font-weight: 500;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .logout-btn:hover { background: #fef2f2; }
+
+        /* ==========================================
+           PAGE HEADER / BREADCRUMB
+           ========================================== */
+        .page-header {
+            padding: 32px 0 24px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: #999;
+            margin-bottom: 8px;
+        }
+        .breadcrumb a { color: #777; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #1a1a1a; }
+        .breadcrumb .sep { color: #ccc; }
+        .breadcrumb .current { color: #1a1a1a; font-weight: 500; }
+        .page-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .item-count {
+            font-size: 0.88rem;
+            color: #999;
+            font-weight: 400;
+        }
+
+        /* ==========================================
+           CART LAYOUT
+           ========================================== */
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 48px;
+            padding: 40px 0 80px 0;
+            flex: 1;
+        }
+
+        /* ==========================================
+           CART ITEMS
+           ========================================== */
+        .cart-items-list { display: flex; flex-direction: column; }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 24px;
+            padding: 32px 0;
+            border-bottom: 1px solid #eee;
+            align-items: start;
+            animation: fadeIn 0.3s ease;
+        }
+        .cart-item:first-child { padding-top: 0; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cart-item-image {
+            width: 120px;
+            height: 120px;
+            background: #f5f3ef;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cart-item-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .cart-item-details { display: flex; flex-direction: column; gap: 8px; }
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .cart-item-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: #bbb;
+            padding: 4px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .cart-item-remove:hover { color: #c9553a; }
+
+        .cart-item-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d4a3e;
+        }
+
+        .cart-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 4px;
+        }
+        .meta-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .meta-value {
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .qty-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-right: 4px;
+        }
+        .qty-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 36px;
+            background: #f5f3ef;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            border: 1px solid #e8e4dc;
+        }
+
+        .cart-item-subtotal {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            min-width: 140px;
+            padding-top: 4px;
+        }
+        .subtotal-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #bbb;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .subtotal-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        /* Cart bottom actions */
+        .cart-bottom-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 24px;
+            margin-top: 8px;
+        }
+        .continue-shopping {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #777;
+            transition: color 0.2s;
+        }
+        .continue-shopping:hover { color: #2d4a3e; }
+        .clear-cart-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: 1.5px solid #e0dcd4;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #c9553a;
+            transition: all 0.2s;
+        }
+        .clear-cart-btn:hover {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        /* ==========================================
+           ORDER SUMMARY SIDEBAR
+           ========================================== */
+        .order-summary {
+            background: #ffffff;
+            border: 1px solid #f0ece4;
+            border-radius: 16px;
+            padding: 32px;
+            align-self: start;
+            position: sticky;
+            top: 96px;
+        }
+        .summary-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0ece4;
+        }
+
+        .summary-items { margin-bottom: 20px; }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 0.85rem;
+        }
+        .summary-item-name {
+            color: #555;
+            font-weight: 500;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .summary-item-price {
+            font-weight: 600;
+            color: #1a1a1a;
+            white-space: nowrap;
+        }
+
+        .summary-divider {
+            border: none;
+            border-top: 1px solid #f0ece4;
+            margin: 16px 0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 0.88rem;
+        }
+        .summary-row-label { color: #888; font-weight: 500; }
+        .summary-row-value { font-weight: 600; color: #1a1a1a; }
+        .summary-row-value.free { color: #2d7a56; }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0 0 0;
+            margin-top: 8px;
+            border-top: 2px solid #1a1a1a;
+        }
+        .summary-total-label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .summary-total-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+
+        .checkout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px 0;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .checkout-btn:hover {
+            background: #2d4a3e;
+            box-shadow: 0 8px 24px rgba(45,74,62,0.25);
+            transform: translateY(-2px);
+        }
+
+        .summary-note {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #bbb;
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+        .summary-payment-icons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .pay-icon {
+            background: #f5f3ef;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #999;
+        }
+
+        /* ==========================================
+           EMPTY CART
+           ========================================== */
+        .empty-cart-container {
+            text-align: center;
+            padding: 80px 40px;
+            grid-column: 1 / -1;
+        }
+        .empty-cart-icon {
+            width: 80px;
+            height: 80px;
+            background: #f5f3ef;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px auto;
+            color: #ccc;
+        }
+        .empty-cart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        .empty-cart-text {
+            font-size: 0.92rem;
+            color: #999;
+            margin-bottom: 28px;
+        }
+        .empty-cart-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #2d4a3e;
+            color: #f0e6d3;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .empty-cart-btn:hover {
+            background: #3d6554;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45,74,62,0.25);
+        }
+
+        /* ==========================================
+           RECOMMENDED PRODUCTS
+           ========================================== */
+        .recommended-section {
+            padding: 64px 0 80px 0;
+            border-top: 1px solid #eee;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .section-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #2d4a3e;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .rec-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #f0ece4;
+            transition: all 0.35s ease;
+        }
+        .rec-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+        }
+        .rec-card-image {
+            background: #f8f6f2;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .rec-card-image img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+        .rec-card:hover .rec-card-image img { transform: scale(1.06); }
+        .rec-card-info { padding: 16px; }
+        .rec-card-category {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #aaa;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+        .rec-card-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            height: 36px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .rec-card-prices { display: flex; align-items: center; gap: 8px; }
+        .rec-price-current { font-size: 0.95rem; font-weight: 700; color: #2d4a3e; }
+        .rec-price-old { font-size: 0.78rem; color: #bbb; text-decoration: line-through; }
+
+        /* ==========================================
+           FOOTER
+           ========================================== */
+        .footer {
+            background: #1a1a1a;
+            color: #aaa;
+            padding: 64px 0 0 0;
+            margin-top: auto;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer-brand .logo { color: #f0e6d3; font-size: 1.5rem; margin-bottom: 16px; display: inline-block; }
+        .footer-brand p { font-size: 0.84rem; line-height: 1.7; color: #777; margin-bottom: 20px; }
+        .footer-social { display: flex; gap: 10px; }
+        .social-link {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        .social-link:hover { background: #2d4a3e; color: #f0e6d3; }
+        .footer-col h4 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #f0e6d3;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul a { font-size: 0.84rem; color: #777; transition: color 0.2s; }
+        .footer-col ul a:hover { color: #f0e6d3; }
+        .footer-bottom {
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: #555;
+        }
+        .footer-payment { display: flex; gap: 12px; align-items: center; }
+        .payment-icon {
+            background: rgba(255,255,255,0.06);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #888;
+        }
+
+        /* ==========================================
+           RESPONSIVE
+           ========================================== */
+        @media (max-width: 1024px) {
+            .container { padding: 0 24px; }
+            .cart-layout { grid-template-columns: 1fr; gap: 32px; }
+            .order-summary { position: static; }
+            .recommended-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+        }
+        @media (max-width: 768px) {
+            .navbar { padding: 0 16px; height: 60px; }
+            .nav-links { display: none; }
+            .page-title { font-size: 1.6rem; }
+            .cart-item { grid-template-columns: 90px 1fr; gap: 16px; }
+            .cart-item-image { width: 90px; height: 90px; }
+            .cart-item-subtotal { display: none; }
+            .recommended-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
     </style>
 </head>
 <body>
-    <div class="header" data-testid="header">
-        <h1 data-testid="page-title">Giỏ hàng</h1>
-        <a href="/" class="back-link" data-testid="continue-shopping-link">Tiếp tục mua sắm</a>
-    </div>
 
-    <div class="cart-container" data-testid="cart-container">
-        <div th:if="${cartEmpty}" class="empty-cart" id="empty-cart" data-testid="empty-cart">
-            <p>Giỏ hàng trống.</p>
-            <p><a href="/">Quay lại mua sắm</a></p>
+    <!-- ============ NAVBAR ============ -->
+    <nav class="navbar" data-testid="header">
+        <div class="nav-left">
+            <a href="/" class="logo">Stella</a>
+            <ul class="nav-links">
+                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/#products-section">Sản phẩm</a></li>
+                <li><a href="/cart" class="active">Giỏ hàng</a></li>
+                <li><a href="/#about">Về chúng tôi</a></li>
+            </ul>
         </div>
-
-        <div th:unless="${cartEmpty}" id="cart-items" data-testid="cart-items">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>Đơn giá</th>
-                        <th>Số lượng</th>
-                        <th>Thành tiền</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="item : ${cart.items}" th:id="'cart-item-' + ${item.productId}"
-                        th:data-testid="'cart-item-' + ${item.productId}">
-                        <td th:text="${item.productName}" data-testid="item-name">Product Name</td>
-                        <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"
-                            data-testid="item-price">0 VND</td>
-                        <td th:text="${item.quantity}" data-testid="item-quantity">1</td>
-                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'"
-                            data-testid="item-subtotal">0 VND</td>
-                        <td>
-                            <form th:action="@{'/cart/remove/' + ${item.productId}}" method="post">
-                                <button type="submit" class="remove-btn"
-                                        th:id="'remove-' + ${item.productId}"
-                                        th:data-testid="'remove-item-' + ${item.productId}">Xóa</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="total-row" data-testid="cart-total-row">
-                Tổng cộng: <span id="cart-total" data-testid="cart-total"
-                    th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+        <div class="nav-right">
+            <div class="user-menu">
+                <div class="user-info-trigger">
+                    <div class="avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
+                    <div class="user-details">
+                        <span class="user-welcome">Xin chào,</span>
+                        <span class="username-text" th:text="${username}">User</span>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button type="submit" class="logout-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
             </div>
+        </div>
+    </nav>
 
-            <div class="actions">
-                <form th:action="@{/cart/clear}" method="post">
-                    <button type="submit" class="btn btn-clear" id="clear-cart-btn"
-                            data-testid="clear-cart-button">Xóa giỏ hàng</button>
-                </form>
-                <a href="/checkout" class="btn btn-checkout" id="checkout-btn"
-                   data-testid="checkout-button">Thanh toán</a>
+    <!-- ============ PAGE HEADER ============ -->
+    <div class="container">
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="/">Trang chủ</a>
+                <span class="sep">›</span>
+                <span class="current">Giỏ hàng</span>
+            </div>
+            <div class="page-title-row">
+                <h1 class="page-title" data-testid="page-title">Giỏ Hàng</h1>
+                <span class="item-count" th:unless="${cartEmpty}" th:text="${cart.items.size()} + ' sản phẩm'">0 sản phẩm</span>
             </div>
         </div>
     </div>
+
+    <!-- ============ CART CONTENT ============ -->
+    <div class="container" data-testid="cart-container">
+        <div class="cart-layout">
+
+            <!-- EMPTY CART STATE -->
+            <div th:if="${cartEmpty}" class="empty-cart-container" id="empty-cart" data-testid="empty-cart">
+                <div class="empty-cart-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                </div>
+                <h2 class="empty-cart-title">Giỏ hàng trống</h2>
+                <p class="empty-cart-text">Bạn chưa có sản phẩm nào trong giỏ hàng. Hãy khám phá cửa hàng!</p>
+                <a href="/" class="empty-cart-btn" data-testid="continue-shopping-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Tiếp tục mua sắm
+                </a>
+            </div>
+
+            <!-- CART WITH ITEMS -->
+            <div th:unless="${cartEmpty}" id="cart-items" data-testid="cart-items">
+                <div class="cart-items-list">
+                    <!-- Each cart item -->
+                    <div th:each="item : ${cart.items}" class="cart-item"
+                         th:id="'cart-item-' + ${item.productId}"
+                         th:data-testid="'cart-item-' + ${item.productId}">
+
+                        <!-- Product image -->
+                        <div class="cart-item-image">
+                            <img th:src="${item.productId == 1 ? '/images/asus_laptop.png' :
+                                          item.productId == 2 ? '/images/iphone_15.png' :
+                                          item.productId == 3 ? '/images/sony_headphone.png' :
+                                          item.productId == 4 ? '/images/cotton_tshirt.png' :
+                                          item.productId == 5 ? '/images/levis_jeans.png' :
+                                          item.productId == 6 ? '/images/nike_airmax.png' : '/images/fashion_banner.png'}"
+                                 alt="Product" />
+                        </div>
+
+                        <!-- Product details -->
+                        <div class="cart-item-details">
+                            <div class="cart-item-header">
+                                <span class="cart-item-name" th:text="${item.productName}" data-testid="item-name">Product Name</span>
+                                <form th:action="@{'/cart/remove/' + ${item.productId}}" method="post" style="display:inline;">
+                                    <button type="submit" class="cart-item-remove"
+                                            th:id="'remove-' + ${item.productId}"
+                                            th:data-testid="'remove-item-' + ${item.productId}"
+                                            title="Xóa sản phẩm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="cart-item-price" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'" data-testid="item-price">0 VND</div>
+
+                            <div class="cart-item-quantity">
+                                <span class="qty-label">Số lượng</span>
+                                <span class="qty-display" data-testid="item-quantity" th:text="${item.quantity}">1</span>
+                            </div>
+                        </div>
+
+                        <!-- Subtotal -->
+                        <div class="cart-item-subtotal">
+                            <span class="subtotal-label">Thành tiền</span>
+                            <span class="subtotal-value" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'" data-testid="item-subtotal">0 VND</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom actions -->
+                    <div class="cart-bottom-actions">
+                        <a href="/" class="continue-shopping" data-testid="continue-shopping-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            Tiếp tục mua sắm
+                        </a>
+                        <form th:action="@{/cart/clear}" method="post" style="display:inline;">
+                            <button type="submit" class="clear-cart-btn" id="clear-cart-btn" data-testid="clear-cart-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                Xóa giỏ hàng
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER SUMMARY SIDEBAR -->
+            <div th:unless="${cartEmpty}" class="order-summary">
+                <h2 class="summary-title">Tóm Tắt Đơn Hàng</h2>
+
+                <!-- Itemized list -->
+                <div class="summary-items">
+                    <div th:each="item : ${cart.items}" class="summary-item">
+                        <span class="summary-item-name" th:text="${item.productName}">Product</span>
+                        <span class="summary-item-price" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                    </div>
+                </div>
+
+                <hr class="summary-divider">
+
+                <!-- Subtotal -->
+                <div class="summary-row">
+                    <span class="summary-row-label">Tạm tính</span>
+                    <span class="summary-row-value" th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-row-label">Phí vận chuyển</span>
+                    <span class="summary-row-value free">Miễn phí</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-row-label">Thuế VAT (đã bao gồm)</span>
+                    <span class="summary-row-value" style="color:#999; font-size:0.82rem;">Included</span>
+                </div>
+
+                <!-- Total -->
+                <div class="summary-total" data-testid="cart-total-row">
+                    <span class="summary-total-label">Tổng cộng</span>
+                    <span class="summary-total-value" id="cart-total" data-testid="cart-total"
+                          th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                </div>
+
+                <a href="/checkout" class="checkout-btn" id="checkout-btn" data-testid="checkout-button">
+                    Tiến hành thanh toán
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+
+                <p class="summary-note">Giao dịch được bảo mật bởi SSL 256-bit</p>
+                <div class="summary-payment-icons">
+                    <span class="pay-icon">VISA</span>
+                    <span class="pay-icon">MC</span>
+                    <span class="pay-icon">MoMo</span>
+                    <span class="pay-icon">ZaloPay</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============ RECOMMENDED PRODUCTS ============ -->
+    <section class="recommended-section" th:unless="${cartEmpty}">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-eyebrow">Gợi ý cho bạn</span>
+                <h2 class="section-title">Sản Phẩm Gợi Ý</h2>
+            </div>
+            <div class="recommended-grid">
+                <div class="rec-card">
+                    <div class="rec-card-image">
+                        <img th:src="@{/images/asus_laptop.png}" alt="ASUS Laptop">
+                    </div>
+                    <div class="rec-card-info">
+                        <div class="rec-card-category">Laptop</div>
+                        <div class="rec-card-name">ASUS VivoBook Pro 15</div>
+                        <div class="rec-card-prices">
+                            <span class="rec-price-current">22.990.000 VND</span>
+                            <span class="rec-price-old">25.990.000 VND</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rec-card">
+                    <div class="rec-card-image">
+                        <img th:src="@{/images/sony_headphone.png}" alt="Sony Headphone">
+                    </div>
+                    <div class="rec-card-info">
+                        <div class="rec-card-category">Phụ kiện</div>
+                        <div class="rec-card-name">Sony WH-1000XM5</div>
+                        <div class="rec-card-prices">
+                            <span class="rec-price-current">6.490.000 VND</span>
+                            <span class="rec-price-old">8.490.000 VND</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rec-card">
+                    <div class="rec-card-image">
+                        <img th:src="@{/images/nike_airmax.png}" alt="Nike Air Max">
+                    </div>
+                    <div class="rec-card-info">
+                        <div class="rec-card-category">Giày dép</div>
+                        <div class="rec-card-name">Nike Air Max 270</div>
+                        <div class="rec-card-prices">
+                            <span class="rec-price-current">3.290.000 VND</span>
+                            <span class="rec-price-old">3.990.000 VND</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rec-card">
+                    <div class="rec-card-image">
+                        <img th:src="@{/images/cotton_tshirt.png}" alt="Cotton T-shirt">
+                    </div>
+                    <div class="rec-card-info">
+                        <div class="rec-card-category">Thời trang</div>
+                        <div class="rec-card-name">Premium Cotton T-Shirt</div>
+                        <div class="rec-card-prices">
+                            <span class="rec-price-current">450.000 VND</span>
+                            <span class="rec-price-old">590.000 VND</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <span class="logo">Stella</span>
+                    <p>Stella là nền tảng thương mại điện tử hàng đầu Việt Nam, cung cấp đa dạng sản phẩm từ điện tử, thời trang, gia dụng đến phụ kiện.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">f</a>
+                        <a href="#" class="social-link" aria-label="Instagram">ig</a>
+                        <a href="#" class="social-link" aria-label="Twitter">tw</a>
+                        <a href="#" class="social-link" aria-label="YouTube">yt</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Danh mục</h4>
+                    <ul>
+                        <li><a href="#">Điện tử & Laptop</a></li>
+                        <li><a href="#">Điện thoại</a></li>
+                        <li><a href="#">Thời trang</a></li>
+                        <li><a href="#">Giày dép</a></li>
+                        <li><a href="#">Gia dụng</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Công ty</h4>
+                    <ul>
+                        <li><a href="#">Về Stella</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                        <li><a href="#">Bảo mật</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Trung tâm hỗ trợ</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2025 Stella. Thiết kế với ❤️ tại Việt Nam.</span>
+                <div class="footer-payment">
+                    <span class="payment-icon">VISA</span>
+                    <span class="payment-icon">MasterCard</span>
+                    <span class="payment-icon">MoMo</span>
+                    <span class="payment-icon">ZaloPay</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>

@@ -4,271 +4,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stella - Simple is More</title>
+    <meta name="description" content="Stella - Cửa hàng thương mại điện tử hàng đầu Việt Nam. Mua sắm điện tử, thời trang, gia dụng với ưu đãi tốt nhất.">
+    <title>Stella - Discover More, Live Better</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ==========================================
+           RESET & BASE
+           ========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Outfit', sans-serif;
-            background: #f8fafc;
-            color: #1e293b;
-            padding: 0;
+            background: #faf9f6;
+            color: #1a1a1a;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f5f3ef; }
+        ::-webkit-scrollbar-thumb { background: #c4b998; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a89970; }
 
-        /* Top Utility Promo Bar */
+        a { text-decoration: none; color: inherit; }
+        button { font-family: inherit; cursor: pointer; }
+        img { max-width: 100%; display: block; }
+
+        .container { max-width: 1340px; margin: 0 auto; padding: 0 40px; }
+
+        /* ==========================================
+           PROMO BAR
+           ========================================== */
         .promo-bar {
-            background: #0f172a;
-            color: #f8fafc;
-            font-size: 0.75rem;
-            padding: 8px 40px;
+            background: #2d4a3e;
+            color: #e8e0d0;
+            font-size: 0.78rem;
+            padding: 10px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            letter-spacing: 0.03em;
         }
-        .promo-left strong {
-            color: #38bdf8;
-        }
-        .promo-right span {
-            margin: 0 8px;
-            opacity: 0.8;
-        }
+        .promo-bar strong { color: #f0e6d3; }
+        .promo-right span { margin: 0 10px; opacity: 0.75; font-size: 0.72rem; }
+        .promo-right span::before { content: '✦ '; opacity: 0.5; }
 
-        /* Navbar */
+        /* ==========================================
+           NAVBAR
+           ========================================== */
         .navbar {
             background: #ffffff;
-            padding: 16px 40px;
+            padding: 0 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+            height: 72px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            transition: box-shadow 0.3s ease;
+        }
+        .navbar.scrolled {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
+        .nav-left { display: flex; align-items: center; gap: 48px; }
+
         .logo {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #0f172a;
-            text-decoration: none;
-            letter-spacing: -0.03em;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-transform: lowercase;
-        }
-        .logo-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            font-size: 1.1rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
             font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
             text-transform: uppercase;
         }
 
-        /* Search bar inside navbar */
-        .nav-center {
-            flex: 0 1 500px;
-            margin: 0 20px;
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        .nav-links a {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #555;
+            transition: color 0.2s;
+            position: relative;
+            padding: 4px 0;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2d4a3e;
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: #1a1a1a; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: #2d4a3e; font-weight: 600; }
+        .nav-links a.active::after { width: 100%; }
+
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+
+        .nav-search-toggle {
+            background: none;
+            border: none;
+            color: #555;
+            padding: 8px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .nav-search-toggle:hover { color: #1a1a1a; }
+
+        /* Search overlay */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 120px;
+        }
+        .search-overlay.active { display: flex; }
+        .search-overlay-inner {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 620px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .search-form {
             display: flex;
-            border: 1px solid #e2e8f0;
-            border-radius: 9999px;
+            border: 2px solid #e0dcd4;
+            border-radius: 12px;
             overflow: hidden;
-            background: #f8fafc;
-            transition: all 0.2s ease;
+            background: #faf9f6;
+            transition: border-color 0.2s;
         }
-        .search-form:focus-within {
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
-            background: white;
-        }
+        .search-form:focus-within { border-color: #2d4a3e; }
         .search-wrapper {
             display: flex;
             align-items: center;
             padding-left: 16px;
             flex: 1;
         }
-        .search-icon {
-            color: #94a3b8;
-        }
+        .search-icon { color: #999; }
         .search-form input {
             width: 100%;
             border: none;
             background: transparent;
-            padding: 10px 12px;
-            font-size: 0.9rem;
+            padding: 14px 12px;
+            font-size: 1rem;
             font-family: inherit;
-            color: #1e293b;
+            color: #1a1a1a;
             outline: none;
         }
-        .search-form input::placeholder {
-            color: #94a3b8;
-        }
-        .search-form button {
-            background: #0f172a;
+        .search-form input::placeholder { color: #aaa; }
+        .search-form button[type="submit"] {
+            background: #2d4a3e;
             color: white;
             border: none;
-            padding: 0 22px;
+            padding: 0 28px;
             font-size: 0.9rem;
             font-weight: 600;
-            cursor: pointer;
             transition: background 0.2s;
         }
-        .search-form button:hover {
-            background: #0ea5e9;
+        .search-form button[type="submit"]:hover { background: #3d6554; }
+        .search-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
         }
 
-        /* Nav Actions */
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        /* Favorites */
         .favorites-link {
             position: relative;
-            cursor: pointer;
-            color: #64748b;
+            color: #555;
             transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            padding: 8px;
         }
-        .favorites-link:hover {
-            color: #0f172a;
-        }
-        .favorites-link .badge {
-            position: absolute;
-            top: -6px;
-            right: -8px;
-            background: #ef4444;
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
-            border-radius: 9999px;
-            padding: 2px 5px;
-            min-width: 16px;
-            text-align: center;
-        }
+        .favorites-link:hover { color: #1a1a1a; }
 
+        /* Cart */
         .cart-link {
             display: flex;
             align-items: center;
             gap: 8px;
-            text-decoration: none;
-            color: #64748b;
+            color: #555;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             transition: color 0.2s;
+            padding: 8px;
         }
-        .cart-link:hover {
-            color: #0f172a;
-        }
-        .cart-icon-wrapper {
-            position: relative;
-        }
-        .cart-icon-wrapper .badge {
+        .cart-link:hover { color: #1a1a1a; }
+        .cart-icon-wrapper { position: relative; }
+        .badge {
             position: absolute;
             top: -6px;
             right: -8px;
-            background: #0ea5e9;
+            background: #c9553a;
             color: white;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 700;
             border-radius: 9999px;
-            padding: 2px 5px;
+            padding: 2px 6px;
             min-width: 16px;
             text-align: center;
-        }
-        .cart-text {
-            font-weight: 600;
+            line-height: 1.3;
         }
 
-        /* User Menu & Dropdown */
-        .user-menu {
-            position: relative;
-            display: inline-block;
-        }
+        /* User menu */
+        .user-menu { position: relative; }
         .user-info-trigger {
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
         }
+        .user-info-trigger:hover { background: #f5f3ef; }
         .avatar {
-            width: 32px;
-            height: 32px;
-            background: #e2e8f0;
-            color: #475569;
+            width: 34px;
+            height: 34px;
+            background: #2d4a3e;
+            color: #f0e6d3;
             border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.95rem;
-            border: 2px solid #cbd5e1;
+            font-size: 0.85rem;
         }
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-        .user-welcome {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            line-height: 1;
-        }
-        .username-text {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #334155;
-            line-height: 1.3;
-        }
+        .user-details { display: flex; flex-direction: column; text-align: left; }
+        .user-welcome { font-size: 0.68rem; color: #999; line-height: 1; }
+        .username-text { font-size: 0.8rem; font-weight: 600; color: #333; line-height: 1.3; }
+
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
             top: 100%;
-            margin-top: 8px;
-            background-color: white;
-            min-width: 150px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            margin-top: 4px;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            border-radius: 10px;
             overflow: hidden;
             z-index: 10;
-            border: 1px solid #f1f5f9;
+            border: 1px solid #f0ece4;
         }
-        .user-menu:hover .dropdown-content {
-            display: block;
-            margin-top: 0;
-        }
+        .user-menu:hover .dropdown-content { display: block; }
         .logout-btn {
             width: 100%;
             text-align: left;
@@ -276,8 +289,7 @@
             border: none;
             padding: 12px 16px;
             font-size: 0.85rem;
-            color: #ef4444;
-            cursor: pointer;
+            color: #c9553a;
             font-weight: 500;
             font-family: inherit;
             display: flex;
@@ -285,304 +297,271 @@
             gap: 8px;
             transition: background 0.2s;
         }
-        .logout-btn:hover {
-            background-color: #fef2f2;
-        }
+        .logout-btn:hover { background: #fef2f2; }
 
-        /* Hero Banner Section */
-        .hero-banner {
+        /* ==========================================
+           HERO BANNER
+           ========================================== */
+        .hero-section {
+            position: relative;
+            background: #2d4a3e;
+            min-height: 520px;
             display: flex;
-            background: #e2e8f0;
-            border-radius: 0 0 24px 24px;
+            align-items: center;
             overflow: hidden;
-            margin-bottom: 40px;
-            align-items: stretch;
-            min-height: 380px;
         }
         .hero-content {
-            flex: 1;
-            padding: 48px 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             position: relative;
-            background: linear-gradient(90deg, rgba(226,232,240,1) 0%, rgba(226,232,240,0.85) 70%, rgba(226,232,240,0) 100%);
             z-index: 2;
+            padding: 60px 80px;
+            max-width: 55%;
         }
-        .breadcrumbs {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-bottom: 24px;
-            letter-spacing: 0.05em;
-            font-weight: 500;
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(240,230,211,0.7);
+            margin-bottom: 16px;
         }
         .hero-title {
             font-family: 'Playfair Display', serif;
-            font-size: 4.2rem;
+            font-size: 3.8rem;
             font-weight: 700;
             line-height: 1.1;
-            color: #0f172a;
-            margin-bottom: 12px;
-            letter-spacing: -0.02em;
-        }
-        .hero-title .highlight {
-            font-weight: 400;
-            font-style: italic;
-            color: #475569;
-        }
-        .hero-subtext {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #475569;
-            letter-spacing: 0.2em;
+            color: #f0e6d3;
             margin-bottom: 20px;
         }
-        .hero-labels {
-            display: flex;
-            gap: 12px;
-            margin-top: 10px;
+        .hero-title em {
+            font-style: italic;
+            font-weight: 400;
+            color: rgba(240,230,211,0.8);
         }
-        .limited {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #0f172a;
-            border-bottom: 2px solid #0f172a;
-            padding-bottom: 4px;
-            letter-spacing: 0.05em;
+        .hero-desc {
+            font-size: 0.95rem;
+            color: rgba(240,230,211,0.65);
+            line-height: 1.7;
+            margin-bottom: 32px;
+            max-width: 460px;
         }
-        .scroll-down {
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #f0e6d3;
+            color: #2d4a3e;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+        .hero-btn:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .hero-image-side {
             position: absolute;
-            right: 40px;
-            bottom: 40px;
-            width: 44px;
-            height: 44px;
-            border: 1px solid rgba(15, 23, 42, 0.15);
+            right: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+        }
+        .hero-image-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .hero-image-overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, #2d4a3e 30%, transparent 100%);
+            z-index: 1;
+        }
+        .hero-scroll {
+            position: absolute;
+            bottom: 30px;
+            left: 80px;
+            z-index: 2;
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid rgba(240,230,211,0.3);
             border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0f172a;
-            cursor: pointer;
+            color: rgba(240,230,211,0.5);
             transition: all 0.3s;
+            cursor: pointer;
+            background: none;
         }
-        .scroll-down:hover {
-            background: #0f172a;
-            color: white;
-            transform: translateY(4px);
+        .hero-scroll:hover {
+            border-color: #f0e6d3;
+            color: #f0e6d3;
+            transform: translateY(3px);
         }
 
-        .hero-image-container {
-            flex: 1.2;
-            position: relative;
-            overflow: hidden;
+        /* ==========================================
+           SERVICE FEATURES STRIP
+           ========================================== */
+        .services-strip {
+            background: #ffffff;
+            border-bottom: 1px solid #f0ece4;
+            padding: 28px 0;
         }
-        .hero-image {
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 8px 0;
+        }
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: #f5f3ef;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d4a3e;
+            flex-shrink: 0;
+        }
+        .service-text h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+        .service-text p {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* ==========================================
+           SECTION COMMON
+           ========================================== */
+        .section { padding: 72px 0; }
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .section-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #2d4a3e;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        .section-subtitle {
+            font-size: 0.92rem;
+            color: #888;
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ==========================================
+           TRENDS SECTION
+           ========================================== */
+        .trends-section { background: #ffffff; }
+        .trends-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .trends-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .trends-text p {
+            font-size: 0.92rem;
+            color: #777;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+        .trends-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #2d4a3e;
+            color: #f0e6d3;
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s;
+        }
+        .trends-btn:hover {
+            background: #3d6554;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45,74,62,0.25);
+        }
+        .trends-image {
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 16/10;
+        }
+        .trends-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: top center;
-            display: block;
+            transition: transform 0.6s ease;
         }
+        .trends-image:hover img { transform: scale(1.03); }
 
-        /* Split Main Container */
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px 80px 40px;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 40px;
-        }
+        /* ==========================================
+           PRODUCT GRID SECTION (Hand-Picked Daily)
+           ========================================== */
+        .products-section { background: #faf9f6; }
 
-        /* Sidebar Filters */
-        .sidebar-filters {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid #f1f5f9;
-            align-self: start;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
-        }
-        .filter-header {
+        .category-tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .filter-header h2 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
-        .advanced-link {
-            font-size: 0.8rem;
-            color: #38bdf8;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .advanced-link:hover {
-            color: #0284c7;
-        }
-
-        .filter-section {
-            margin-bottom: 24px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .filter-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .section-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #0f172a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            cursor: pointer;
-        }
-        .arrow-down {
-            font-size: 0.65rem;
-            color: #94a3b8;
-        }
-
-        .brand-search input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            margin-bottom: 12px;
-            font-family: inherit;
-            outline: none;
-        }
-        .brand-search input:focus {
-            border-color: #38bdf8;
-        }
-
-        .brand-list {
-            list-style: none;
-        }
-        .brand-list li {
-            margin-bottom: 8px;
-        }
-        .brand-item {
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            color: #475569;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .brand-item input {
-            margin-right: 10px;
-            accent-color: #38bdf8;
-            width: 15px;
-            height: 15px;
-            cursor: pointer;
-        }
-        .brand-item .count {
-            margin-left: auto;
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-
-        /* Price Range Slider Simulator */
-        .price-slider-visual {
-            margin: 10px 0 16px 0;
-        }
-        .slider-chart {
-            width: 100%;
-            height: 28px;
-        }
-        .price-inputs {
-            display: flex;
-            align-items: center;
+            justify-content: center;
             gap: 8px;
-        }
-        .price-inputs input {
-            flex: 1;
-            width: 100px;
-            padding: 8px 10px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            text-align: center;
-            font-weight: 600;
-            color: #334155;
-            outline: none;
-            background: #f8fafc;
-        }
-        .price-inputs span {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        /* Size options grid */
-        .size-options {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-        }
-        .size-btn {
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 6px 0;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #475569;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            outline: none;
-        }
-        .size-btn:hover {
-            border-color: #0f172a;
-            color: #0f172a;
-        }
-        .size-btn.active {
-            background: #0f172a;
-            border-color: #0f172a;
-            color: white;
-        }
-
-        /* Color Options flex */
-        .color-options {
-            display: flex;
+            margin-bottom: 40px;
             flex-wrap: wrap;
-            gap: 8px;
         }
-        .color-dot {
-            width: 20px;
-            height: 20px;
+        .cat-tab {
+            background: transparent;
+            border: 1.5px solid #e0dcd4;
+            padding: 8px 22px;
             border-radius: 9999px;
-            border: 1px solid rgba(15,23,42,0.1);
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #777;
+            transition: all 0.25s;
         }
-        .color-dot.active {
-            transform: scale(1.15);
-            box-shadow: 0 0 0 2px white, 0 0 0 4px #0f172a;
-        }
-        .color-black { background: #0f172a; }
-        .color-white { background: #ffffff; }
-        .color-red { background: #ef4444; }
-        .color-yellow { background: #eab308; }
-        .color-green { background: #22c55e; }
-        .color-blue { background: #3b82f6; }
-        .color-purple { background: #a855f7; }
-        .color-orange { background: #f97316; }
-
-        /* Right main area */
-        .products-area {
-            display: flex;
-            flex-direction: column;
+        .cat-tab:hover { border-color: #2d4a3e; color: #2d4a3e; }
+        .cat-tab.active {
+            background: #2d4a3e;
+            border-color: #2d4a3e;
+            color: #f0e6d3;
         }
 
         /* Controls row */
@@ -592,19 +571,11 @@
             align-items: center;
             margin-bottom: 24px;
         }
-        .results-count {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #64748b;
-        }
-        .controls-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .results-count { font-size: 0.88rem; color: #888; font-weight: 500; }
+        .controls-right { display: flex; align-items: center; gap: 12px; }
         .layout-toggle {
             display: flex;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e0dcd4;
             border-radius: 8px;
             overflow: hidden;
         }
@@ -612,135 +583,114 @@
             background: white;
             border: none;
             padding: 6px 10px;
-            cursor: pointer;
-            color: #64748b;
+            color: #999;
             display: flex;
             align-items: center;
-            justify-content: center;
             transition: all 0.2s;
         }
-        .layout-btn:hover {
-            color: #0f172a;
-        }
-        .layout-btn.active {
-            background: #f1f5f9;
-            color: #0f172a;
-        }
+        .layout-btn:hover { color: #1a1a1a; }
+        .layout-btn.active { background: #f5f3ef; color: #1a1a1a; }
         .sort-dropdown {
-            font-size: 0.85rem;
-            color: #475569;
-            cursor: pointer;
-            border: 1px solid #e2e8f0;
+            font-size: 0.82rem;
+            color: #777;
+            border: 1px solid #e0dcd4;
             border-radius: 8px;
-            padding: 6px 12px;
+            padding: 6px 14px;
             background: white;
         }
 
         /* Product Grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 24px;
         }
 
         /* Product Card */
         .product-card {
             background: white;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
+            border-radius: 14px;
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 1px solid #f0ece4;
             display: flex;
             flex-direction: column;
             height: 100%;
         }
         .product-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 8px 16px -8px rgba(15, 23, 42, 0.04);
-            border-color: #cbd5e1;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+            border-color: #e0dcd4;
         }
-
         .product-image-container {
             position: relative;
-            background: #f8fafc;
-            aspect-ratio: 1.1;
+            background: #f8f6f2;
+            aspect-ratio: 1;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-bottom: 1px solid #f1f5f9;
         }
         .product-card-image {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 85%;
+            max-height: 85%;
             object-fit: contain;
-            transition: transform 0.4s ease;
-            padding: 15px;
+            transition: transform 0.5s ease;
         }
-        .product-card:hover .product-card-image {
-            transform: scale(1.05);
-        }
+        .product-card:hover .product-card-image { transform: scale(1.06); }
 
         .arrival-badge {
             position: absolute;
             top: 14px;
             left: 14px;
-            background: #0ea5e9;
-            color: white;
-            font-size: 0.65rem;
+            background: #2d4a3e;
+            color: #f0e6d3;
+            font-size: 0.62rem;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 9999px;
-            letter-spacing: 0.02em;
+            padding: 4px 12px;
+            border-radius: 6px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             z-index: 2;
-            box-shadow: 0 2px 6px rgba(56, 189, 248, 0.2);
         }
-
         .favorite-btn {
             position: absolute;
             bottom: 14px;
             right: 14px;
             background: white;
             border: none;
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #94a3b8;
-            cursor: pointer;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s;
+            color: #bbb;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: all 0.25s;
             z-index: 2;
         }
-        .favorite-btn:hover {
-            color: #ef4444;
-            transform: scale(1.1);
-        }
+        .favorite-btn:hover { color: #e53e3e; transform: scale(1.1); }
 
         .product-details {
-            padding: 18px;
+            padding: 18px 20px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
-
         .product-brand {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 700;
             text-transform: uppercase;
-            color: #94a3b8;
-            letter-spacing: 0.08em;
+            color: #aaa;
+            letter-spacing: 0.1em;
             margin-bottom: 6px;
         }
-
         .product-name {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 12px;
+            color: #1a1a1a;
+            margin-bottom: 14px;
             line-height: 1.4;
             height: 40px;
             display: -webkit-box;
@@ -748,147 +698,450 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .price-stock-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
-
-        .price {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #0ea5e9;
-        }
-
-        .stock {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-        .in-stock {
-            color: #10b981;
-            background: #ecfdf5;
-        }
-        .low-stock {
-            color: #f59e0b;
-            background: #fffbeb;
-        }
+        .price { font-size: 1.05rem; font-weight: 700; color: #2d4a3e; }
+        .stock { font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+        .in-stock { color: #2d7a56; background: #ecfdf5; }
+        .low-stock { color: #b45309; background: #fffbeb; }
 
         .add-btn {
             width: 100%;
-            padding: 10px 0;
-            background: #0f172a;
+            padding: 11px 0;
+            background: #1a1a1a;
             color: white;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 600;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05);
+            transition: all 0.25s;
+            letter-spacing: 0.02em;
         }
         .add-btn:hover:not(:disabled) {
-            background: #0284c7;
-            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+            background: #2d4a3e;
+            box-shadow: 0 4px 14px rgba(45,74,62,0.25);
         }
-        .add-btn:disabled {
-            background: #cbd5e1;
-            color: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+        .add-btn:disabled { background: #ddd; color: #999; cursor: not-allowed; }
 
-        /* Empty message style */
         .empty-message {
             text-align: center;
             padding: 60px 40px;
             background: white;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            color: #64748b;
+            border-radius: 14px;
+            border: 1px solid #f0ece4;
+            color: #888;
             font-size: 1rem;
-            font-weight: 500;
             grid-column: 1 / -1;
         }
 
-        /* Responsive adjustments */
+        /* ==========================================
+           PROMO BANNERS (2 side by side)
+           ========================================== */
+        .promo-banners { background: #ffffff; }
+        .promo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .promo-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 320px;
+            display: flex;
+            align-items: flex-end;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+        .promo-card:hover { transform: scale(1.01); }
+        .promo-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .promo-card:hover img { transform: scale(1.05); }
+        .promo-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+        }
+        .promo-card-content {
+            position: relative;
+            z-index: 2;
+            padding: 32px;
+            color: white;
+        }
+        .promo-card-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .promo-card-content p {
+            font-size: 0.82rem;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+        .promo-card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .promo-card-btn:hover { background: rgba(255,255,255,0.35); }
+
+        /* ==========================================
+           SHOP LATEST TRENDS CTA
+           ========================================== */
+        .cta-section {
+            background: #f5f3ef;
+            text-align: center;
+            padding: 64px 0;
+        }
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 14px;
+        }
+        .cta-section p {
+            font-size: 0.92rem;
+            color: #777;
+            max-width: 480px;
+            margin: 0 auto 28px auto;
+            line-height: 1.7;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #2d4a3e;
+            color: #f0e6d3;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s;
+        }
+        .cta-btn:hover {
+            background: #3d6554;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45,74,62,0.25);
+        }
+
+        /* ==========================================
+           TOP RATED / FEATURED PRODUCTS
+           ========================================== */
+        .top-rated-section { background: #ffffff; }
+        .featured-section { background: #ffffff; }
+
+        .rating-stars {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+        .star { color: #f0c040; font-size: 0.72rem; }
+        .star.empty { color: #ddd; }
+
+        .discount-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #c9553a;
+            color: white;
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            z-index: 2;
+        }
+        .original-price {
+            font-size: 0.82rem;
+            color: #bbb;
+            text-decoration: line-through;
+            margin-left: 8px;
+            font-weight: 400;
+        }
+
+        /* ==========================================
+           CUSTOMER TESTIMONIALS
+           ========================================== */
+        .testimonials-section {
+            background: #2d4a3e;
+            padding: 72px 0;
+        }
+        .testimonials-section .section-header { margin-bottom: 48px; }
+        .testimonials-section .section-eyebrow { color: rgba(240,230,211,0.5); }
+        .testimonials-section .section-title { color: #f0e6d3; }
+        .testimonials-section .section-subtitle { color: rgba(240,230,211,0.5); }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .testimonial-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 28px;
+            transition: all 0.3s;
+        }
+        .testimonial-card:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-4px);
+        }
+        .testimonial-stars {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 16px;
+        }
+        .testimonial-stars .star { color: #f0c040; font-size: 0.82rem; }
+        .testimonial-text {
+            font-size: 0.9rem;
+            color: rgba(240,230,211,0.75);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            background: rgba(240,230,211,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #f0e6d3;
+            font-size: 0.85rem;
+        }
+        .testimonial-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #f0e6d3;
+        }
+        .testimonial-role {
+            font-size: 0.72rem;
+            color: rgba(240,230,211,0.45);
+        }
+
+        /* ==========================================
+           GALLERY
+           ========================================== */
+        .gallery-section { background: #faf9f6; }
+        .gallery-image {
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .gallery-image img {
+            width: 100%;
+            transition: transform 0.6s ease;
+        }
+        .gallery-image:hover img { transform: scale(1.03); }
+
+        /* ==========================================
+           FOOTER
+           ========================================== */
+        .footer {
+            background: #1a1a1a;
+            color: #aaa;
+            padding: 64px 0 0 0;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer-brand .logo {
+            color: #f0e6d3;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+        .footer-brand p {
+            font-size: 0.84rem;
+            line-height: 1.7;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .footer-social {
+            display: flex;
+            gap: 10px;
+        }
+        .social-link {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        .social-link:hover { background: #2d4a3e; color: #f0e6d3; }
+
+        .footer-col h4 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #f0e6d3;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul a {
+            font-size: 0.84rem;
+            color: #777;
+            transition: color 0.2s;
+        }
+        .footer-col ul a:hover { color: #f0e6d3; }
+
+        .footer-bottom {
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: #555;
+        }
+        .footer-payment { display: flex; gap: 12px; align-items: center; }
+        .payment-icon {
+            background: rgba(255,255,255,0.06);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #888;
+        }
+
+        /* ==========================================
+           ANIMATIONS
+           ========================================== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-on-scroll {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==========================================
+           RESPONSIVE
+           ========================================== */
         @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-            .sidebar-filters {
-                display: none;
-            }
+            .container { padding: 0 24px; }
+            .hero-content { max-width: 65%; padding: 40px; }
+            .hero-title { font-size: 3rem; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .trends-grid { grid-template-columns: 1fr; }
+            .promo-grid { grid-template-columns: 1fr; }
+            .testimonials-grid { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
         }
         @media (max-width: 768px) {
-            .navbar {
-                padding: 16px 20px;
-            }
-            .nav-center {
-                display: none;
-            }
-            .hero-banner {
-                flex-direction: column;
-            }
-            .hero-content {
-                padding: 35px 24px;
-            }
-            .hero-title {
-                font-size: 2.8rem;
-            }
-            .main-container {
-                padding: 0 20px 40px 20px;
-            }
+            .promo-bar { padding: 8px 16px; font-size: 0.7rem; flex-direction: column; gap: 4px; text-align: center; }
+            .promo-right { display: none; }
+            .navbar { padding: 0 16px; height: 60px; }
+            .nav-links { display: none; }
+            .hero-section { min-height: 400px; }
+            .hero-content { max-width: 100%; padding: 32px 20px; }
+            .hero-title { font-size: 2.4rem; }
+            .hero-image-side { width: 40%; opacity: 0.3; }
+            .hero-image-overlay { width: 80%; }
+            .hero-scroll { left: 20px; bottom: 20px; }
+            .services-grid { grid-template-columns: 1fr; gap: 12px; }
+            .section { padding: 48px 0; }
+            .section-title { font-size: 1.8rem; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
         }
     </style>
 </head>
 <body>
-    <!-- Top utility promo bar -->
+
+    <!-- ============ TOP PROMO BAR ============ -->
     <div class="promo-bar">
-        <div class="promo-left">Giao hàng đến: <strong>Việt Nam 🇻🇳</strong></div>
+        <div class="promo-left">Miễn phí vận chuyển đơn hàng trên <strong>500.000đ</strong> 🎁</div>
         <div class="promo-right">
-            <span>Vận Chuyển Uy Tín</span> | 
-            <span>Đổi Trả Dễ Dàng</span> | 
+            <span>Vận Chuyển Uy Tín</span>
+            <span>Đổi Trả Dễ Dàng</span>
             <span>Thanh Toán Bảo Mật</span>
         </div>
     </div>
 
-    <!-- Main Navigation Bar -->
-    <nav class="navbar" data-testid="header">
+    <!-- ============ MAIN NAVIGATION ============ -->
+    <nav class="navbar" data-testid="header" id="main-nav">
         <div class="nav-left">
-            <a href="/" class="logo">
-                <span class="logo-icon">S</span>stella
-            </a>
+            <a href="/" class="logo">Stella</a>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Trang chủ</a></li>
+                <li><a href="/#products-section">Sản phẩm</a></li>
+                <li><a href="/cart">Giỏ hàng</a></li>
+                <li><a href="/#about">Về chúng tôi</a></li>
+            </ul>
         </div>
-        
-        <div class="nav-center">
-            <form th:action="@{/}" method="get" class="search-form" data-testid="search-form">
-                <div class="search-wrapper">
-                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="search-input" name="keyword" placeholder="Bạn đang tìm kiếm sản phẩm gì?"
-                           th:value="${keyword}" data-testid="search-input">
-                </div>
-                <button type="submit" id="search-btn" data-testid="search-button">Tìm kiếm</button>
-            </form>
-        </div>
-        
+
         <div class="nav-right">
+            <!-- Beautiful inline search form in navbar -->
+            <form th:action="@{/}" method="get" class="search-form-navbar" data-testid="search-form" style="display: flex; align-items: center; border-bottom: 1px solid #c4b998; margin-right: 20px; padding: 2px 0;">
+                <input type="text" id="search-input" name="keyword" placeholder="Tìm kiếm sản phẩm..."
+                       th:value="${keyword}" data-testid="search-input" style="border: none; background: transparent; outline: none; font-size: 0.85rem; padding: 4px 0; width: 160px; color: #111111; font-family: inherit;">
+                <button type="submit" id="search-btn" data-testid="search-button" style="border: none; background: transparent; color: #666666; cursor: pointer; padding-left: 6px; display: flex; align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </form>
+
+            <!-- Favorites -->
             <div class="favorites-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
                 <span class="badge">3</span>
             </div>
-            
+
+            <!-- Cart -->
             <a href="/cart" class="cart-link" id="cart-link" data-testid="cart-link">
                 <div class="cart-icon-wrapper">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
                     <span class="badge" id="cart-count" data-testid="cart-count" th:text="${cartItemCount}">0</span>
                 </div>
-                <span class="cart-text">Giỏ hàng</span>
             </a>
 
+            <!-- User Menu -->
             <div class="user-menu">
                 <div class="user-info-trigger">
                     <div class="avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
@@ -900,7 +1153,7 @@
                 <div class="dropdown-content">
                     <form th:action="@{/logout}" method="post" style="display:inline;">
                         <button type="submit" class="logout-btn" data-testid="logout-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                             Đăng xuất
                         </button>
                     </form>
@@ -909,140 +1162,126 @@
         </div>
     </nav>
 
-    <!-- Beautiful Large Banner Section -->
-    <section class="hero-banner">
-        <div class="hero-content">
-            <div class="breadcrumbs">Trang chủ &gt; Sản phẩm</div>
-            <h1 class="hero-title">Simple <br><span class="highlight">is More</span></h1>
-            <div class="hero-subtext">DESIGNED TO STAND OUT</div>
-            <div class="hero-labels">
-                <span class="limited">LIMITED-EDITIONS STYLES</span>
-            </div>
-            <div class="scroll-down">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-            </div>
+    <!-- ============ SEARCH OVERLAY ============ -->
+    <div id="search-overlay" class="search-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+        <div class="search-overlay-inner">
+            <form th:action="@{/}" method="get" class="search-form" data-testid="search-form">
+                <div class="search-wrapper">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="search-input" name="keyword" placeholder="Tìm kiếm sản phẩm, thương hiệu, danh mục..."
+                           th:value="${keyword}" data-testid="search-input" autofocus>
+                </div>
+                <button type="submit" id="search-btn" data-testid="search-button">Tìm kiếm</button>
+            </form>
         </div>
-        <div class="hero-image-container">
-            <img th:src="@{/images/fashion_banner.png}" alt="Stella Fashion Banner" class="hero-image">
+    </div>
+
+    <!-- ============ HERO BANNER ============ -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-eyebrow">Bộ sưu tập mới 2025</div>
+            <h1 class="hero-title">Our New Collection<br><em>For Everyone</em></h1>
+            <p class="hero-desc">Khám phá bộ sưu tập đa dạng từ điện tử, thời trang, đến gia dụng. Chất lượng cao, giá tốt nhất thị trường.</p>
+            <a href="#products-section" class="hero-btn">
+                Mua sắm ngay
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+        </div>
+        <div class="hero-image-side">
+            <div class="hero-image-overlay"></div>
+            <img th:src="@{/images/hero_banner_new.png}" alt="Stella Collection Banner">
+        </div>
+        <button class="hero-scroll" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        </button>
+    </section>
+
+    <!-- ============ SERVICE FEATURES STRIP ============ -->
+    <section class="services-strip" id="services">
+        <div class="container">
+            <div class="services-grid">
+                <div class="service-item animate-on-scroll">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    </div>
+                    <div class="service-text">
+                        <h4>Miễn Phí Vận Chuyển</h4>
+                        <p>Cho đơn hàng từ 500.000đ</p>
+                    </div>
+                </div>
+                <div class="service-item animate-on-scroll">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                    </div>
+                    <div class="service-text">
+                        <h4>Đổi Trả Dễ Dàng</h4>
+                        <p>Hoàn trả trong 30 ngày</p>
+                    </div>
+                </div>
+                <div class="service-item animate-on-scroll">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </div>
+                    <div class="service-text">
+                        <h4>Hỗ Trợ 24/7</h4>
+                        <p>Luôn sẵn sàng phục vụ</p>
+                    </div>
+                </div>
+                <div class="service-item animate-on-scroll">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </div>
+                    <div class="service-text">
+                        <h4>Thanh Toán Bảo Mật</h4>
+                        <p>Giao dịch được mã hóa SSL</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Main Workspace: Sidebar & Grid -->
-    <div class="main-container">
-        <!-- Sidebar filters panel -->
-        <aside class="sidebar-filters">
-            <div class="filter-header">
-                <h2>Bộ lọc</h2>
-                <a href="#" class="advanced-link">Nâng cao</a>
-            </div>
-
-            <!-- Brand Section -->
-            <div class="filter-section">
-                <h3 class="section-title">Thương hiệu <span class="arrow-down">▼</span></h3>
-                <div class="brand-search">
-                    <input type="text" placeholder="Tìm thương hiệu...">
+    <!-- ============ TRENDS OF THE SEASON ============ -->
+    <section class="section trends-section">
+        <div class="container">
+            <div class="trends-grid animate-on-scroll">
+                <div class="trends-text">
+                    <span class="section-eyebrow">Xu hướng mới</span>
+                    <h2>Xu Hướng<br>Của Mùa</h2>
+                    <p>Bộ sưu tập đa dạng từ công nghệ, thời trang đến nội thất — tất cả được chọn lọc kỹ lưỡng để mang đến trải nghiệm mua sắm tuyệt vời nhất.</p>
+                    <a href="#products-section" class="trends-btn">
+                        Khám phá ngay
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
                 </div>
-                <ul class="brand-list">
-                    <li>
-                        <label class="brand-item">
-                            <input type="checkbox" checked>
-                            <span>Nike</span>
-                            <span class="count">123</span>
-                        </label>
-                    </li>
-                    <li>
-                        <label class="brand-item">
-                            <input type="checkbox" checked>
-                            <span>ASUS</span>
-                            <span class="count">65</span>
-                        </label>
-                    </li>
-                    <li>
-                        <label class="brand-item">
-                            <input type="checkbox" checked>
-                            <span>Apple</span>
-                            <span class="count">99</span>
-                        </label>
-                    </li>
-                    <li>
-                        <label class="brand-item">
-                            <input type="checkbox">
-                            <span>Adidas</span>
-                            <span class="count">55</span>
-                        </label>
-                    </li>
-                    <li>
-                        <label class="brand-item">
-                            <input type="checkbox">
-                            <span>Puma</span>
-                            <span class="count">325</span>
-                        </label>
-                    </li>
-                    <li>
-                        <label class="brand-item">
-                            <input type="checkbox">
-                            <span>Uniqlo</span>
-                            <span class="count">61</span>
-                        </label>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Price Section -->
-            <div class="filter-section">
-                <h3 class="section-title">Giá bán <span class="arrow-down">▼</span></h3>
-                <div class="price-slider-visual">
-                    <svg viewBox="0 0 100 20" class="slider-chart">
-                        <path d="M 0,20 Q 20,5 40,15 T 80,10 T 100,20 Z" fill="rgba(14, 165, 233, 0.15)"></path>
-                        <line x1="0" y1="18" x2="100" y2="18" stroke="#e2e8f0" stroke-width="2"></line>
-                        <line x1="20" y1="18" x2="80" y2="18" stroke="#0ea5e9" stroke-width="2"></line>
-                        <circle cx="20" cy="18" r="4" fill="#0ea5e9"></circle>
-                        <circle cx="80" cy="18" r="4" fill="#0ea5e9"></circle>
-                    </svg>
-                </div>
-                <div class="price-inputs">
-                    <input type="text" value="0 đ" readonly>
-                    <span>đến</span>
-                    <input type="text" value="50.000.000 đ" readonly>
+                <div class="trends-image">
+                    <img th:src="@{/images/trends_collage.png}" alt="Xu hướng của mùa">
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Size Section -->
-            <div class="filter-section">
-                <h3 class="section-title">Kích cỡ <span class="arrow-down">▼</span></h3>
-                <div class="size-options">
-                    <button type="button" class="size-btn active">XXS</button>
-                    <button type="button" class="size-btn">XS</button>
-                    <button type="button" class="size-btn">S</button>
-                    <button type="button" class="size-btn">M</button>
-                    <button type="button" class="size-btn">L</button>
-                    <button type="button" class="size-btn">XL</button>
-                    <button type="button" class="size-btn">XXL</button>
-                </div>
+    <!-- ============ HAND-PICKED DAILY — PRODUCT GRID (Dynamic) ============ -->
+    <section class="section products-section" id="products-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-eyebrow">Sản phẩm</span>
+                <h2 class="section-title">Tuyển Chọn Hàng Ngày</h2>
+                <p class="section-subtitle">Những sản phẩm chất lượng nhất được chọn lọc mỗi ngày dành riêng cho bạn</p>
             </div>
 
-            <!-- Color Section -->
-            <div class="filter-section">
-                <h3 class="section-title">Màu sắc <span class="arrow-down">▼</span></h3>
-                <div class="color-options">
-                    <span class="color-dot color-black active"></span>
-                    <span class="color-dot color-white"></span>
-                    <span class="color-dot color-red"></span>
-                    <span class="color-dot color-yellow"></span>
-                    <span class="color-dot color-green"></span>
-                    <span class="color-dot color-blue"></span>
-                    <span class="color-dot color-purple"></span>
-                    <span class="color-dot color-orange"></span>
-                </div>
+            <div class="category-tabs animate-on-scroll">
+                <button class="cat-tab active">Tất cả</button>
+                <button class="cat-tab">Điện tử &amp; Laptop</button>
+                <button class="cat-tab">Thời trang</button>
+                <button class="cat-tab">Giày dép</button>
+                <button class="cat-tab">Phụ kiện</button>
+                <button class="cat-tab">Gia dụng</button>
             </div>
-        </aside>
 
-        <!-- Main Product Area -->
-        <main class="products-area">
             <!-- Controls row -->
             <div class="controls-row">
                 <div class="results-count">
-                    <span th:text="${products.size()} + ' kết quả được tìm thấy'">0 kết quả</span>
+                    <span th:text="${products.size()} + ' sản phẩm được tìm thấy'">0 sản phẩm</span>
                 </div>
                 <div class="controls-right">
                     <div class="layout-toggle">
@@ -1059,16 +1298,15 @@
                 </div>
             </div>
 
-            <!-- Product Grid -->
+            <!-- Product Grid (Thymeleaf dynamic) -->
             <div id="product-list" class="product-grid" data-testid="product-list">
-                <div th:each="product : ${products}" class="product-card"
+                <div th:each="product : ${products}" class="product-card animate-on-scroll"
                      th:id="'product-' + ${product.id}"
                      th:data-testid="'product-card-' + ${product.id}">
                     
                     <div class="product-image-container">
-                        <span class="arrival-badge">New Arrival</span>
+                        <span class="arrival-badge">Mới</span>
                         
-                        <!-- High-quality generated product images resolved dynamically -->
                         <img th:src="${product.id == 1 ? '/images/asus_laptop.png' :
                                       product.id == 2 ? '/images/iphone_15.png' :
                                       product.id == 3 ? '/images/sony_headphone.png' :
@@ -1077,7 +1315,7 @@
                                       product.id == 6 ? '/images/nike_airmax.png' : '/images/fashion_banner.png'}"
                              alt="Product Image" class="product-card-image">
                         
-                        <button type="button" class="favorite-btn">
+                        <button type="button" class="favorite-btn" aria-label="Add to favorites">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
                         </button>
                     </div>
@@ -1113,7 +1351,319 @@
                  data-testid="empty-message">
                 Không tìm thấy sản phẩm nào phù hợp với từ khóa của bạn.
             </div>
-        </main>
-    </div>
+        </div>
+    </section>
+
+    <!-- ============ PROMO BANNERS ============ -->
+    <section class="section promo-banners">
+        <div class="container">
+            <div class="promo-grid">
+                <div class="promo-card animate-on-scroll">
+                    <img th:src="@{/images/promo_electronics.png}" alt="Công nghệ & Điện tử">
+                    <div class="promo-card-overlay"></div>
+                    <div class="promo-card-content">
+                        <h3>Công Nghệ Hàng Đầu</h3>
+                        <p>Thiết bị điện tử cao cấp với ưu đãi đặc biệt</p>
+                        <a href="#products-section" class="promo-card-btn">
+                            Xem ngay
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="promo-card animate-on-scroll">
+                    <img th:src="@{/images/promo_lifestyle.png}" alt="Phong cách sống">
+                    <div class="promo-card-overlay"></div>
+                    <div class="promo-card-content">
+                        <h3>Phong Cách Sống Hiện Đại</h3>
+                        <p>Nội thất & gia dụng cho ngôi nhà của bạn</p>
+                        <a href="#products-section" class="promo-card-btn">
+                            Khám phá
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SHOP LATEST TRENDS CTA ============ -->
+    <section class="cta-section">
+        <div class="container animate-on-scroll">
+            <span class="section-eyebrow">Xu hướng mua sắm</span>
+            <h2>Khám Phá Xu Hướng Mới Nhất</h2>
+            <p>Từ điện tử thông minh đến thời trang & nội thất — chúng tôi luôn cập nhật những sản phẩm hot nhất thị trường.</p>
+            <a href="#products-section" class="cta-btn">
+                Xem tất cả sản phẩm
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============ TOP RATED PRODUCTS ============ -->
+    <section class="section top-rated-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-eyebrow">Đánh giá cao</span>
+                <h2 class="section-title">Sản Phẩm Được Yêu Thích</h2>
+                <p class="section-subtitle">Những sản phẩm được khách hàng đánh giá cao nhất tại Stella</p>
+            </div>
+
+            <div class="category-tabs animate-on-scroll">
+                <button class="cat-tab active">Tất cả</button>
+                <button class="cat-tab">Điện tử</button>
+                <button class="cat-tab">Thời trang</button>
+                <button class="cat-tab">Gia dụng</button>
+            </div>
+
+            <div class="product-grid">
+                <div th:each="product : ${products}" class="product-card animate-on-scroll">
+                    <div class="product-image-container">
+                        <span class="discount-badge" th:if="${product.id % 2 == 0}">-15%</span>
+                        <img th:src="${product.id == 1 ? '/images/asus_laptop.png' :
+                                      product.id == 2 ? '/images/iphone_15.png' :
+                                      product.id == 3 ? '/images/sony_headphone.png' :
+                                      product.id == 4 ? '/images/cotton_tshirt.png' :
+                                      product.id == 5 ? '/images/levis_jeans.png' :
+                                      product.id == 6 ? '/images/nike_airmax.png' : '/images/fashion_banner.png'}"
+                             alt="Product Image" class="product-card-image">
+                        <button type="button" class="favorite-btn" aria-label="Add to favorites">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-details">
+                        <div class="rating-stars">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star" th:classappend="${product.id % 3 == 0} ? 'empty' : ''">★</span>
+                        </div>
+                        <span class="product-brand" th:text="${product.category}">Category</span>
+                        <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                        <div class="price-stock-row">
+                            <p class="price">
+                                <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                                <span class="original-price" th:if="${product.id % 2 == 0}" th:text="${#numbers.formatDecimal(product.price * 1.15, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+                            </p>
+                        </div>
+                        <form th:action="@{'/add-to-cart/' + ${product.id}}" method="post">
+                            <button type="submit" class="add-btn" th:disabled="${product.stock == 0}">
+                                <span th:if="${product.stock > 0}">Thêm vào giỏ</span>
+                                <span th:if="${product.stock == 0}">Hết hàng</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CUSTOMER TESTIMONIALS ============ -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-eyebrow">Đánh giá</span>
+                <h2 class="section-title">Khách Hàng Yêu Thích</h2>
+                <p class="section-subtitle">Hàng nghìn khách hàng tin tưởng và yêu thích Stella mỗi ngày</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate-on-scroll">
+                    <div class="testimonial-stars">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <p class="testimonial-text">"Chất lượng sản phẩm tuyệt vời! Tôi đã mua laptop ASUS và rất hài lòng với cả sản phẩm lẫn dịch vụ giao hàng."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">M</div>
+                        <div>
+                            <div class="testimonial-name">Minh Anh</div>
+                            <div class="testimonial-role">Khách hàng thân thiết</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card animate-on-scroll">
+                    <div class="testimonial-stars">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <p class="testimonial-text">"Mua sắm tại Stella luôn là trải nghiệm tuyệt vời. Sản phẩm đa dạng, giá cả hợp lý và giao hàng siêu nhanh!"</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">H</div>
+                        <div>
+                            <div class="testimonial-name">Hoàng Linh</div>
+                            <div class="testimonial-role">Khách hàng VIP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card animate-on-scroll">
+                    <div class="testimonial-stars">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <p class="testimonial-text">"Dịch vụ khách hàng 24/7 rất chuyên nghiệp. Tôi gặp vấn đề với đơn hàng và được hỗ trợ giải quyết ngay lập tức."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">T</div>
+                        <div>
+                            <div class="testimonial-name">Thanh Tùng</div>
+                            <div class="testimonial-role">Khách hàng mới</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FEATURED PRODUCTS ============ -->
+    <section class="section featured-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-eyebrow">Nổi bật</span>
+                <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
+                <p class="section-subtitle">Đừng bỏ lỡ những sản phẩm hot nhất tại cửa hàng</p>
+            </div>
+
+            <div class="product-grid">
+                <div th:each="product : ${products}" class="product-card animate-on-scroll">
+                    <div class="product-image-container">
+                        <span class="arrival-badge" th:if="${product.id <= 3}">Hot</span>
+                        <span class="discount-badge" th:if="${product.id > 3}">-20%</span>
+                        <img th:src="${product.id == 1 ? '/images/asus_laptop.png' :
+                                      product.id == 2 ? '/images/iphone_15.png' :
+                                      product.id == 3 ? '/images/sony_headphone.png' :
+                                      product.id == 4 ? '/images/cotton_tshirt.png' :
+                                      product.id == 5 ? '/images/levis_jeans.png' :
+                                      product.id == 6 ? '/images/nike_airmax.png' : '/images/fashion_banner.png'}"
+                             alt="Product Image" class="product-card-image">
+                        <button type="button" class="favorite-btn" aria-label="Add to favorites">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-details">
+                        <div class="rating-stars">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <span class="product-brand" th:text="${product.category}">Category</span>
+                        <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                        <div class="price-stock-row">
+                            <p class="price">
+                                <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                                <span class="original-price" th:if="${product.id > 3}" th:text="${#numbers.formatDecimal(product.price * 1.25, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+                            </p>
+                            <p class="stock" th:classappend="${product.stock <= 20} ? 'low-stock' : 'in-stock'"
+                               th:text="'Còn: ' + ${product.stock}">Còn: 0</p>
+                        </div>
+                        <form th:action="@{'/add-to-cart/' + ${product.id}}" method="post">
+                            <button type="submit" class="add-btn" th:disabled="${product.stock == 0}">
+                                <span th:if="${product.stock > 0}">Thêm vào giỏ</span>
+                                <span th:if="${product.stock == 0}">Hết hàng</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ GALLERY / FROM THE GALLERY ============ -->
+    <section class="section gallery-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-eyebrow">Cộng đồng</span>
+                <h2 class="section-title">Từ Bộ Sưu Tập</h2>
+                <p class="section-subtitle">Cảm hứng mua sắm từ cộng đồng Stella</p>
+            </div>
+            <div class="gallery-image animate-on-scroll">
+                <img th:src="@{/images/gallery_grid.png}" alt="Stella Community Gallery">
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer" id="about">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <span class="logo">Stella</span>
+                    <p>Stella là nền tảng thương mại điện tử hàng đầu Việt Nam, cung cấp đa dạng sản phẩm từ điện tử, thời trang, gia dụng đến phụ kiện với chất lượng cao nhất.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">f</a>
+                        <a href="#" class="social-link" aria-label="Instagram">ig</a>
+                        <a href="#" class="social-link" aria-label="Twitter">tw</a>
+                        <a href="#" class="social-link" aria-label="YouTube">yt</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Danh mục</h4>
+                    <ul>
+                        <li><a href="#">Điện tử & Laptop</a></li>
+                        <li><a href="#">Điện thoại</a></li>
+                        <li><a href="#">Thời trang</a></li>
+                        <li><a href="#">Giày dép</a></li>
+                        <li><a href="#">Gia dụng</a></li>
+                        <li><a href="#">Phụ kiện</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Công ty</h4>
+                    <ul>
+                        <li><a href="#">Về Stella</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                        <li><a href="#">Bảo mật</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Trung tâm hỗ trợ</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2025 Stella. Thiết kế với ❤️ tại Việt Nam.</span>
+                <div class="footer-payment">
+                    <span class="payment-icon">VISA</span>
+                    <span class="payment-icon">MasterCard</span>
+                    <span class="payment-icon">MoMo</span>
+                    <span class="payment-icon">ZaloPay</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============ SCRIPTS ============ -->
+    <script>
+        // Navbar scroll shadow effect
+        const navbar = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 10);
+        });
+
+        // Scroll animation observer
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+        // Open search overlay if keyword exists (for back-navigation UX)
+        const keywordInput = document.getElementById('search-input');
+        if (keywordInput && keywordInput.value && keywordInput.value.trim() !== '') {
+            document.getElementById('search-overlay').classList.add('active');
+        }
+
+        // Close search overlay with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('search-overlay').classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -3,80 +3,1046 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thanh toán</title>
+    <meta name="description" content="Thanh toán - Stella E-commerce">
+    <title>Thanh toán — Stella</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <style>
+        /* ==========================================
+           RESET & BASE STYLES
+           ========================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #2c3e50; color: white; border-radius: 8px; margin-bottom: 20px; }
-        .header h1 { font-size: 1.5rem; }
-        .back-link { color: white; text-decoration: none; background: #3498db; padding: 8px 16px; border-radius: 4px; }
-        .checkout-container { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
-        .warning { background: #fff3cd; color: #856404; padding: 15px; border-radius: 4px; margin-bottom: 20px; text-align: center; }
-        .voucher-section { margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 4px; }
-        .voucher-section h3 { margin-bottom: 10px; }
-        .voucher-form { display: flex; gap: 10px; }
-        .voucher-form input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        .voucher-form button { padding: 10px 20px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        .voucher-success { color: #27ae60; margin-top: 10px; font-weight: bold; }
-        .voucher-error { color: #e74c3c; margin-top: 10px; font-weight: bold; }
-        .order-summary { margin: 20px 0; }
-        .order-summary table { width: 100%; border-collapse: collapse; }
-        .order-summary td { padding: 8px 0; }
-        .order-total { font-size: 1.4rem; font-weight: bold; color: #2c3e50; border-top: 2px solid #2c3e50; padding-top: 10px; margin-top: 10px; }
-        .place-order-btn { display: block; width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 4px; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
-        .place-order-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #ffffff;
+            color: #111111;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #faf9f6; }
+        ::-webkit-scrollbar-thumb { background: #c4b998; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a89970; }
+
+        a { text-decoration: none; color: inherit; transition: all 0.2s; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; }
+        img { max-width: 100%; display: block; }
+
+        /* ==========================================
+           HEADER / NAVBAR
+           ========================================== */
+        .navbar {
+            background: #ffffff;
+            padding: 0 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+            border-bottom: 1px solid #e5e0d8;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-left { display: flex; align-items: center; gap: 48px; }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #111111;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+        }
+        .nav-links { display: flex; list-style: none; gap: 32px; }
+        .nav-links a {
+            font-size: 0.84rem;
+            font-weight: 500;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 4px 0;
+        }
+        .nav-links a:hover { color: #111111; }
+        .nav-right { display: flex; align-items: center; }
+        .nav-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .nav-back-link:hover { color: #2d4a3e; }
+
+        /* ==========================================
+           FULL SCREEN SPLIT LAYOUT
+           ========================================== */
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            flex: 1;
+            min-height: calc(100vh - 72px);
+        }
+
+        /* LEFT SIDE: Cream Background */
+        .checkout-left-side {
+            background-color: #faf9f6;
+            padding: 60px 80px;
+            border-right: 1px solid #e5e0d8;
+        }
+
+        /* RIGHT SIDE: White Background */
+        .checkout-right-side {
+            background-color: #ffffff;
+            padding: 60px 80px;
+        }
+
+        /* ==========================================
+           LEFT SIDE ELEMENTS
+           ========================================== */
+        .checkout-header {
+            margin-bottom: 40px;
+        }
+        .checkout-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: #111111;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        /* Minimal Progress Steps */
+        .minimal-steps {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            list-style: none;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid #e5e0d8;
+            padding-bottom: 12px;
+        }
+        .minimal-step { transition: color 0.2s; }
+        .minimal-step.completed { color: #888888; }
+        .minimal-step.active {
+            color: #111111;
+            font-weight: 700;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 10px;
+            margin-bottom: -11px;
+        }
+        .step-arrow {
+            font-size: 0.7rem;
+            color: #cccccc;
+        }
+
+        /* Warning Banner */
+        .checkout-warning {
+            background: #fdf2f2;
+            border: 1px solid #fde8e8;
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.88rem;
+            color: #9b1c1c;
+            font-weight: 500;
+        }
+        .warning-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            background: #fde8e8;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c81e1e;
+        }
+
+        /* Express Checkout Section */
+        .express-checkout-box {
+            background: #ffffff;
+            border: 1px solid #e5e0d8;
+            border-radius: 4px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .express-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+        }
+        .apple-pay-btn {
+            width: 100%;
+            max-width: 320px;
+            height: 48px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .apple-pay-btn:hover { background: #222222; }
+        .apple-pay-logo {
+            display: inline-block;
+            vertical-align: middle;
+            margin-top: -2px;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: #999999;
+            font-size: 0.74rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 36px;
+        }
+        .or-divider::before, .or-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #e5e0d8;
+        }
+
+        /* Section Container */
+        .checkout-left-section {
+            margin-bottom: 48px;
+        }
+        .section-headline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111111;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e0d8;
+        }
+
+        /* Contact & Form styling */
+        .form-row {
+            margin-bottom: 24px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 16px;
+        }
+        .form-group {
+            position: relative;
+        }
+        .form-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .form-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #c4b998;
+            background: transparent;
+            padding: 10px 0;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: #111111;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            border-bottom-color: #2d4a3e;
+        }
+        .form-select {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #c4b998;
+            background: transparent;
+            padding: 10px 0;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: #111111;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 0.6rem;
+            color: #888888;
+            position: absolute;
+            right: 0;
+            bottom: 12px;
+            pointer-events: none;
+        }
+
+        .login-subtext {
+            font-size: 0.8rem;
+            color: #666666;
+            margin-top: 10px;
+        }
+        .login-link {
+            color: #2d4a3e;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        .login-link:hover { color: #111111; }
+
+        /* Left Side Action buttons */
+        .bottom-action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid #e5e0d8;
+        }
+        .return-cart-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border: 1px solid #111111;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #111111;
+            transition: all 0.2s;
+        }
+        .return-cart-btn:hover {
+            background-color: #111111;
+            color: #ffffff;
+        }
+        .continue-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: #111111;
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover:not(:disabled) {
+            background: #2d4a3e;
+            box-shadow: 0 4px 12px rgba(45,74,62,0.15);
+        }
+        .continue-btn:disabled {
+            background: #cccccc;
+            color: #888888;
+            cursor: not-allowed;
+        }
+
+        /* ==========================================
+           RIGHT SIDE ELEMENTS
+           ========================================== */
+        .right-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #111111;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e0d8;
+        }
+
+        .estimate-table {
+            width: 100%;
+            margin-bottom: 32px;
+        }
+        .estimate-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #f5f3ef;
+        }
+        .estimate-row:last-child { border-bottom: none; }
+        .estimate-lbl { color: #666666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+        .estimate-val { font-weight: 600; color: #111111; }
+        .estimate-val.free { color: #2d7a56; }
+        .estimate-val.savings { color: #c9553a; }
+
+        .estimate-divider {
+            border: none;
+            border-top: 1px solid #e5e0d8;
+            margin: 12px 0;
+        }
+
+        .estimate-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-top: 2px solid #111111;
+            margin-top: 12px;
+        }
+        .estimate-total-lbl {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #111111;
+        }
+        .estimate-total-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111111;
+        }
+
+        /* Voucher Promo Section */
+        .voucher-promo-box {
+            background-color: #faf9f6;
+            border: 1px solid #e5e0d8;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        .voucher-lbl-text {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .voucher-form-wrapper {
+            display: flex;
+            gap: 12px;
+        }
+        .voucher-promo-input {
+            flex: 1;
+            border: none;
+            border-bottom: 1.5px solid #c4b998;
+            background: transparent;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: #111111;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .voucher-promo-input:focus { border-bottom-color: #2d4a3e; }
+        .voucher-promo-btn {
+            background: #111111;
+            color: #ffffff;
+            padding: 10px 24px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.2s;
+        }
+        .voucher-promo-btn:hover { background: #2d4a3e; }
+
+        .voucher-msg-block {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .voucher-success-box {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .voucher-error-box {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Order Details items display (Left & Right alignment) */
+        .right-order-summary {
+            margin-top: 40px;
+        }
+        .right-order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .right-order-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: #111111;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .right-order-edit-lnk {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: #2d4a3e;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid currentColor;
+        }
+        .right-order-edit-lnk:hover { color: #111111; }
+
+        .right-order-thumbs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .thumb-wrapper {
+            aspect-ratio: 1;
+            background-color: #faf9f6;
+            border: 1px solid #e5e0d8;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            transition: transform 0.2s;
+        }
+        .thumb-wrapper:hover {
+            transform: scale(1.03);
+        }
+        .thumb-wrapper img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        /* Traditional list layout for LEFT side review of items */
+        .left-order-items {
+            margin-top: 32px;
+        }
+        .left-item-row {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e0d8;
+        }
+        .left-item-row:last-child { border-bottom: none; }
+        .left-item-img {
+            width: 80px;
+            height: 80px;
+            background: #ffffff;
+            border: 1px solid #e5e0d8;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+        }
+        .left-item-img img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+        }
+        .left-item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .left-item-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #111111;
+        }
+        .left-item-quantity {
+            font-size: 0.8rem;
+            color: #777777;
+        }
+        .left-item-price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #111111;
+        }
+
+        /* Trust badges */
+        .trust-info {
+            text-align: center;
+            font-size: 0.74rem;
+            color: #999999;
+            margin-top: 24px;
+            line-height: 1.6;
+        }
+        .trust-cards {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .trust-card-lbl {
+            background: #faf9f6;
+            border: 1px solid #e5e0d8;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #888888;
+        }
+
+        /* ==========================================
+           FOOTER
+           ========================================== */
+        .footer {
+            background: #111111;
+            color: #999999;
+            padding: 60px 0 30px 0;
+            margin-top: auto;
+            border-top: 1px solid #e5e0d8;
+        }
+        .footer-container {
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer-brand .logo { color: #ffffff; font-size: 1.5rem; margin-bottom: 16px; display: inline-block; }
+        .footer-brand p { font-size: 0.82rem; line-height: 1.7; color: #888888; }
+        .footer-col h4 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul a { font-size: 0.82rem; color: #888888; }
+        .footer-col ul a:hover { color: #ffffff; }
+        .footer-bottom {
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.76rem;
+            color: #666666;
+        }
+        .footer-payment { display: flex; gap: 12px; }
+        .payment-icon {
+            background: rgba(255,255,255,0.04);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #777777;
+        }
+
+        /* ==========================================
+           RESPONSIVE STYLES
+           ========================================== */
+        @media (max-width: 1140px) {
+            .checkout-container { grid-template-columns: 1fr; }
+            .checkout-left-side { padding: 40px; border-right: none; border-bottom: 1px solid #e5e0d8; }
+            .checkout-right-side { padding: 40px; }
+            .navbar { padding: 0 30px; }
+        }
+        @media (max-width: 768px) {
+            .navbar { height: 60px; }
+            .nav-links { display: none; }
+            .checkout-left-side, .checkout-right-side { padding: 30px 20px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 16px; }
+            .bottom-action-buttons { flex-direction: column-reverse; gap: 16px; }
+            .return-cart-btn, .continue-btn { width: 100%; justify-content: center; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+        @media (max-width: 480px) {
+            .footer-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="header" data-testid="header">
-        <h1 data-testid="page-title">Thanh toán</h1>
-        <a href="/cart" class="back-link" data-testid="back-to-cart-link">Quay lại giỏ hàng</a>
-    </div>
 
-    <div class="checkout-container" data-testid="checkout-container">
-        <div th:if="${warning}" class="warning" id="checkout-warning"
-             data-testid="checkout-warning" th:text="${warning}"></div>
-
-        <div th:unless="${cart.items.isEmpty()}">
-            <h2 data-testid="order-details-title">Chi tiết đơn hàng</h2>
-            <div class="order-summary" data-testid="order-summary">
-                <table>
-                    <tr th:each="item : ${cart.items}"
-                        th:data-testid="'order-item-' + ${item.productId}">
-                        <td th:text="${item.productName}" data-testid="order-item-name">Product</td>
-                        <td th:text="'x' + ${item.quantity}" data-testid="order-item-qty">x1</td>
-                        <td th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'"
-                            data-testid="order-item-subtotal">0 VND</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="order-total" data-testid="order-total-section">
-                Tổng tiền: <span id="order-total" data-testid="order-total"
-                    th:text="${discountedTotal != null ? #numbers.formatDecimal(discountedTotal, 0, 'COMMA', 0, 'POINT') + ' VND' : #numbers.formatDecimal(orderTotal, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</span>
-            </div>
-
-            <div class="voucher-section" data-testid="voucher-section">
-                <h3>Mã giảm giá</h3>
-                <form th:action="@{/checkout/apply-voucher}" method="post" class="voucher-form"
-                      data-testid="voucher-form">
-                    <input type="text" id="voucher-input" name="voucherCode" placeholder="Nhập mã voucher..."
-                           th:value="${voucherCode}" data-testid="voucher-input">
-                    <button type="submit" id="apply-voucher-btn"
-                            data-testid="apply-voucher-button">Áp dụng</button>
-                </form>
-                <p th:if="${voucherSuccess}" class="voucher-success" id="voucher-message"
-                   data-testid="voucher-success-message" th:text="${voucherSuccess}"></p>
-                <p th:if="${voucherError}" class="voucher-error" id="voucher-message"
-                   data-testid="voucher-error-message" th:text="${voucherError}"></p>
-            </div>
-
-            <form th:action="@{/checkout/place-order}" method="post" data-testid="place-order-form">
-                <input type="hidden" name="orderId" th:value="${orderId}">
-                <button type="submit" class="place-order-btn" id="place-order-btn"
-                        data-testid="place-order-button">Đặt hàng</button>
-            </form>
+    <!-- ============ NAVBAR ============ -->
+    <nav class="navbar" data-testid="header">
+        <div class="nav-left">
+            <a href="/" class="logo">Stella</a>
+            <ul class="nav-links">
+                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/#products-section">Sản phẩm</a></li>
+                <li><a href="/cart">Giỏ hàng</a></li>
+                <li><a href="/#about">Về chúng tôi</a></li>
+            </ul>
         </div>
+        <div class="nav-right">
+            <a href="/cart" class="nav-back-link" data-testid="back-to-cart-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Quay lại giỏ hàng
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============ CHECKOUT WRAPPER ============ -->
+    <div class="checkout-container" data-testid="checkout-container">
+
+        <!-- ============ LEFT PANEL: FORM & INFO ============ -->
+        <div class="checkout-left-side">
+            <div class="checkout-header">
+                <h1 class="checkout-title" data-testid="page-title">Checkout</h1>
+                
+                <ul class="minimal-steps">
+                    <li class="minimal-step completed">Giỏ hàng</li>
+                    <li class="step-arrow">/</li>
+                    <li class="minimal-step active">Thanh toán</li>
+                    <li class="step-arrow">/</li>
+                    <li class="minimal-step">Xác nhận</li>
+                </ul>
+            </div>
+
+            <!-- Global warning alert (e.g. Empty Cart alert from Backend) -->
+            <div th:if="${warning}" class="checkout-warning" id="checkout-warning" data-testid="checkout-warning">
+                <div class="warning-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </div>
+                <span th:text="${warning}"></span>
+            </div>
+
+            <div th:unless="${cart.items.isEmpty()}">
+                
+                <!-- 1. EXPRESS CHECKOUT -->
+                <div class="express-checkout-box">
+                    <div class="express-title">Thanh toán nhanh</div>
+                    <button class="apple-pay-btn" type="button">
+                        <span>Checkout with</span>
+                        <svg class="apple-pay-logo" width="48" height="20" viewBox="0 0 48 20" fill="currentColor">
+                            <path d="M6.35 15.34c0-1.89 1.54-2.8 1.6-2.84-.88-1.29-2.26-1.47-2.75-1.51-1.19-.12-2.33.7-2.93.7-.6 0-1.54-.66-2.55-.64-1.31.02-2.53.77-3.2 1.94-1.36 2.36-.35 5.86.97 7.76.65.93 1.41 1.97 2.41 1.93.98-.04 1.34-.63 2.52-.63 1.17 0 1.52.63 2.54.61 1.05-.02 1.73-.94 2.37-1.87.75-1.09 1.06-2.15 1.07-2.2-.03-.01-2.05-.79-2.08-3.16zM4.16 8.95c.53-.67.9-1.59.8-2.51-.79.03-1.75.53-2.32 1.19-.51.59-.95 1.52-.83 2.43.88.07 1.79-.43 2.35-1.11z" />
+                            <text x="21" y="15" font-family="'Outfit', sans-serif" font-weight="700" font-size="14" fill="currentColor">Pay</text>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="or-divider">Hoặc</div>
+
+                <!-- 2. CONTACT INFORMATION -->
+                <div class="checkout-left-section">
+                    <h3 class="section-headline">Thông tin liên lạc</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="contact-email">Địa chỉ Email</label>
+                            <input type="email" id="contact-email" class="form-input" placeholder="ten-cua-ban@vi-du.com" value="guest.user@example.com">
+                        </div>
+                    </div>
+                    <p class="login-subtext">Đã có tài khoản? <a href="#" class="login-link">Đăng nhập</a></p>
+                </div>
+
+                <!-- 3. SHIPPING ADDRESS -->
+                <div class="checkout-left-section">
+                    <h3 class="section-headline">Địa chỉ giao hàng</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group select-wrapper">
+                            <label class="form-label" for="shipping-country">Quốc gia</label>
+                            <select id="shipping-country" class="form-select">
+                                <option value="VN" selected>Việt Nam</option>
+                                <option value="US">Hoa Kỳ (United States)</option>
+                                <option value="JP">Nhật Bản</option>
+                                <option value="KR">Hàn Quốc</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-first-name">Họ</label>
+                            <input type="text" id="shipping-first-name" class="form-input" placeholder="Nguyễn">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-last-name">Tên</label>
+                            <input type="text" id="shipping-last-name" class="form-input" placeholder="Văn A">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-address">Địa chỉ nhà</label>
+                            <input type="text" id="shipping-address" class="form-input" placeholder="Số 1 Đại Cồ Việt, Hai Bà Trưng">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-address-2">Căn hộ, phòng, số tầng (Tùy chọn)</label>
+                            <input type="text" id="shipping-address-2" class="form-input" placeholder="Tầng 5, Tòa nhà A">
+                        </div>
+                    </div>
+
+                    <div class="form-row grid-3">
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-city">Thành phố</label>
+                            <input type="text" id="shipping-city" class="form-input" placeholder="Hà Nội">
+                        </div>
+                        <div class="form-group select-wrapper">
+                            <label class="form-label" for="shipping-state">Tỉnh / Bang</label>
+                            <select id="shipping-state" class="form-select">
+                                <option value="HN" selected>Hà Nội</option>
+                                <option value="HCM">TP. Hồ Chí Minh</option>
+                                <option value="DN">Đà Nẵng</option>
+                                <option value="HP">Hải Phòng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-zip">Mã ZIP / Bưu điện</label>
+                            <input type="text" id="shipping-zip" class="form-input" placeholder="100000">
+                        </div>
+                    </div>
+
+                    <div class="form-row grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-phone">Số điện thoại di động</label>
+                            <input type="tel" id="shipping-phone" class="form-input" placeholder="0987654321">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="shipping-phone-2">Số điện thoại tối (Tùy chọn)</label>
+                            <input type="tel" id="shipping-phone-2" class="form-input" placeholder="0243123456">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. ORDER ITEMS REVIEW DETAIL LIST (LEFT SIDE) -->
+                <div class="checkout-left-section left-order-items" data-testid="order-summary">
+                    <h3 class="section-headline">Chi tiết đơn hàng</h3>
+                    <div th:each="item : ${cart.items}" class="left-item-row" th:data-testid="'order-item-' + ${item.productId}">
+                        <div class="left-item-img">
+                            <img th:src="${item.productId == 1 ? '/images/asus_laptop.png' :
+                                          item.productId == 2 ? '/images/iphone_15.png' :
+                                          item.productId == 3 ? '/images/sony_headphone.png' :
+                                          item.productId == 4 ? '/images/cotton_tshirt.png' :
+                                          item.productId == 5 ? '/images/levis_jeans.png' :
+                                          item.productId == 6 ? '/images/nike_airmax.png' : '/images/fashion_banner.png'}"
+                                 alt="Product Thumbnail" />
+                        </div>
+                        <div class="left-item-details">
+                            <span class="left-item-title" data-testid="order-item-name" th:text="${item.productName}">Product Name</span>
+                            <span class="left-item-quantity" data-testid="order-item-qty" th:text="'Số lượng: ' + ${item.quantity}">Quantity</span>
+                        </div>
+                        <div class="left-item-price" data-testid="order-item-subtotal"
+                             th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</div>
+                    </div>
+                </div>
+
+                <!-- 5. BOTTOM ACTIONS AND SUBMISSION FORM -->
+                <div class="bottom-action-buttons">
+                    <a href="/cart" class="return-cart-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        Trở lại giỏ hàng
+                    </a>
+                    
+                    <form th:action="@{/checkout/place-order}" method="post" data-testid="place-order-form" style="display:inline;">
+                        <input type="hidden" name="orderId" th:value="${orderId}">
+                        <button type="submit" class="continue-btn" id="place-order-btn" data-testid="place-order-button">
+                            Đặt hàng
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:6px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ============ RIGHT PANEL: ORDER ESTIMATE & VOUCHER ============ -->
+        <div class="checkout-right-side">
+            <div th:unless="${cart.items.isEmpty()}">
+                
+                <h2 class="right-section-title">Tóm Tắt Đơn Hàng</h2>
+                
+                <!-- Bảng tính tiền chi tiết -->
+                <div class="estimate-table">
+                    <div class="estimate-row">
+                        <span class="estimate-lbl">Tạm tính</span>
+                        <span class="estimate-val" th:text="${#numbers.formatDecimal(orderTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                    </div>
+                    <div class="estimate-row">
+                        <span class="estimate-lbl">Phí vận chuyển</span>
+                        <span class="estimate-val free">Miễn phí</span>
+                    </div>
+                    <div class="estimate-row">
+                        <span class="estimate-lbl">Thuế VAT</span>
+                        <span class="estimate-val" style="color:#888888;">Đã bao gồm</span>
+                    </div>
+
+                    <!-- Discount Row (if voucher is applied successfully) -->
+                    <div th:if="${discountedTotal != null}" class="estimate-row">
+                        <span class="estimate-lbl">Giảm giá voucher</span>
+                        <span class="estimate-val savings" th:text="'-' + ${#numbers.formatDecimal(orderTotal - discountedTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                    </div>
+
+                    <hr class="estimate-divider">
+
+                    <!-- Tổng thanh toán (Strictly checked in Selenium) -->
+                    <div class="estimate-total-row" data-testid="order-total-section">
+                        <span class="estimate-total-lbl">Tổng cộng</span>
+                        <span class="estimate-total-val" id="order-total" data-testid="order-total"
+                              th:text="${discountedTotal != null ? #numbers.formatDecimal(discountedTotal, 0, 'COMMA', 0, 'POINT') + ' VND' : #numbers.formatDecimal(orderTotal, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</span>
+                    </div>
+                </div>
+
+                <!-- Voucher Promotion Form Section -->
+                <div class="voucher-promo-box" data-testid="voucher-section">
+                    <span class="voucher-lbl-text">Mã giảm giá (Voucher)</span>
+                    <form th:action="@{/checkout/apply-voucher}" method="post" class="voucher-form-wrapper" data-testid="voucher-form">
+                        <input type="text" id="voucher-input" name="voucherCode"
+                               class="voucher-promo-input"
+                               placeholder="Nhập mã ưu đãi của bạn..."
+                               th:value="${voucherCode}" data-testid="voucher-input">
+                        <button type="submit" id="apply-voucher-btn" class="voucher-promo-btn"
+                                data-testid="apply-voucher-button">Áp dụng</button>
+                    </form>
+
+                    <!-- Success voucher message -->
+                    <div th:if="${voucherSuccess}" class="voucher-msg-block voucher-success-box" id="voucher-message"
+                         data-testid="voucher-success-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span th:text="${voucherSuccess}"></span>
+                    </div>
+
+                    <!-- Error voucher message -->
+                    <div th:if="${voucherError}" class="voucher-msg-block voucher-error-box" id="voucher-message"
+                         data-testid="voucher-error-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                        <span th:text="${voucherError}"></span>
+                    </div>
+                </div>
+
+                <!-- ĐƠN HÀNG CỦA TÔI / PRODUCT THUMBNAILS GRID -->
+                <div class="right-order-summary">
+                    <div class="right-order-header">
+                        <h3 class="right-order-title">Đơn hàng</h3>
+                        <a href="/cart" class="right-order-edit-lnk">Chỉnh sửa</a>
+                    </div>
+                    <div class="right-order-thumbs">
+                        <div th:each="item : ${cart.items}" class="thumb-wrapper">
+                            <img th:src="${item.productId == 1 ? '/images/asus_laptop.png' :
+                                          item.productId == 2 ? '/images/iphone_15.png' :
+                                          item.productId == 3 ? '/images/sony_headphone.png' :
+                                          item.productId == 4 ? '/images/cotton_tshirt.png' :
+                                          item.productId == 5 ? '/images/levis_jeans.png' :
+                                          item.productId == 6 ? '/images/nike_airmax.png' : '/images/fashion_banner.png'}"
+                                 alt="Product thumbnail" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SSL Security badges -->
+                <p class="trust-info">Giao dịch được mã hóa và bảo mật tuyệt đối bởi SSL 256-bit.</p>
+                <div class="trust-cards">
+                    <span class="trust-card-lbl">VISA</span>
+                    <span class="trust-card-lbl">MC</span>
+                    <span class="trust-card-lbl">MoMo</span>
+                    <span class="trust-card-lbl">ZaloPay</span>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <span class="logo">Stella</span>
+                    <p>Stella là nền tảng thương mại điện tử hàng đầu Việt Nam, cung cấp đa dạng sản phẩm từ điện tử, thời trang, gia dụng đến phụ kiện cao cấp.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Danh mục</h4>
+                    <ul>
+                        <li><a href="#">Điện tử & Laptop</a></li>
+                        <li><a href="#">Thời trang</a></li>
+                        <li><a href="#">Giày dép</a></li>
+                        <li><a href="#">Gia dụng</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Công ty</h4>
+                    <ul>
+                        <li><a href="#">Về Stella</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                        <li><a href="#">Bảo mật</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Trung tâm hỗ trợ</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2025 Stella. Thiết kế với ❤️ tại Việt Nam.</span>
+                <div class="footer-payment">
+                    <span class="payment-icon">VISA</span>
+                    <span class="payment-icon">MasterCard</span>
+                    <span class="payment-icon">MoMo</span>
+                    <span class="payment-icon">ZaloPay</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
