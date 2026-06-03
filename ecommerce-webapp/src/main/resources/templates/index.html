@@ -272,7 +272,7 @@
             position: absolute;
             right: 0;
             top: 100%;
-            margin-top: 4px;
+            margin-top: 0;
             background: white;
             min-width: 160px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.12);
@@ -281,7 +281,8 @@
             z-index: 10;
             border: 1px solid #f0ece4;
         }
-        .user-menu:hover .dropdown-content { display: block; }
+        .user-menu:hover .dropdown-content,
+        .user-menu:focus-within .dropdown-content { display: block; }
         .logout-btn {
             width: 100%;
             text-align: left;
