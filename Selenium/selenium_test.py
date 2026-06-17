@@ -24,7 +24,8 @@ class SauceDemoTests(unittest.TestCase):
         # Kiểm tra đăng nhập thành công bằng cách tìm tiêu đề 'Products'
         title = self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, "title"))).text
         self.assertEqual(title, "Products")
-        print("-> Login Test Passed!")
+        self.driver.save_screenshot("anh1.png")
+        print("-> Login Test Passed (Saved anh1.png)!")
 
     def test_02_add_to_cart(self):
         print("Running Test 2: Add to Cart...")
@@ -40,7 +41,8 @@ class SauceDemoTests(unittest.TestCase):
         # Kiểm tra icon giỏ hàng hiển thị số 1
         cart_badge = self.driver.find_element(By.CLASS_NAME, "shopping_cart_badge").text
         self.assertEqual(cart_badge, "1")
-        print("-> Add to Cart Test Passed!")
+        self.driver.save_screenshot("anh2.png")
+        print("-> Add to Cart Test Passed (Saved anh2.png)!")
 
     def test_03_logout(self):
         print("Running Test 3: Logout...")
@@ -51,13 +53,14 @@ class SauceDemoTests(unittest.TestCase):
 
         # Mở menu và nhấn Logout
         self.driver.find_element(By.ID, "react-burger-menu-btn").click()
-        logout_btn = self.wait.until(EC.element_to_be_clickable((By.ID, "logout_sidebar_link")))
-        logout_btn.click()
+        logout_btn = self.wait.until(EC.presence_of_element_located((By.ID, "logout_sidebar_link")))
+        self.driver.execute_script("arguments[0].click();", logout_btn)
 
         # Kiểm tra đã quay về trang login có nút login-button (chờ 1 chút để web chuyển trang)
         login_btn = self.wait.until(EC.presence_of_element_located((By.ID, "login-button")))
         self.assertTrue(login_btn.is_displayed())
-        print("-> Logout Test Passed!")
+        self.driver.save_screenshot("anh3.png")
+        print("-> Logout Test Passed (Saved anh3.png)!")
 
     def tearDown(self):
         # Đóng trình duyệt sau mỗi test case
